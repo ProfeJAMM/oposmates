@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SdA: Proyecto PHANTOM - Números Complejos 1º Bachillerato</title>
+
+    <!-- CONFIGURACIÓN MATHJAX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- SCRIPT DE CONSOLA PHANTOM -->
+    <script>
+        console.log("%c SYSTEM: PHANTOM // STATUS: ONLINE ", "background: #2e1065; color: #d946ef; font-size: 14px; font-weight: bold; border: 2px solid #d946ef; padding: 5px;");
+        console.log("Cargando módulos de realidad aumentada...");
+        console.log("Sesiones 9-10: Operación Horizonte Fractal desplegada.");
+    </script>
+
+    <!-- FUENTES GOOGLE -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;600;800&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Paleta Institucional */
+            --primary-blue: #0f172a;
+            --teacher-orange: #f97316;
+            --practice-green: #10b981;
+            --solved-blue: #3b82f6;
+            --dua-purple: #a855f7;
+            --project-gold: #eab308;
+
+            /* Paleta Narrativa "PHANTOM" (Espectral) */
+            --cyber-dark: #0f0518;
+            /* Negro/Violeta profundo */
+            --neon-cyan: #00f3ff;
+            --neon-violet: #d946ef;
+            /* Magenta eléctrico */
+            --neon-green: #39ff14;
+            --grid-color: #2e1065;
+
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 30px 30px;
+            overflow-wrap: break-word;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, var(--cyber-dark) 0%, #3b0764 100%);
+            color: white;
+            padding: 60px 40px;
+            position: relative;
+            border-bottom: 5px solid var(--neon-violet);
+            overflow: hidden;
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(217, 70, 239, 0.05) 10px,
+                    rgba(217, 70, 239, 0.05) 20px);
+            pointer-events: none;
+        }
+
+        header::before {
+            content: "SYSTEM: PHANTOM // DIMENSION: IMAGINARY";
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8em;
+            color: var(--neon-violet);
+            opacity: 0.9;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--neon-violet);
+        }
+
+        h1 {
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 800;
+            font-size: 3em;
+            margin: 0;
+            letter-spacing: -2px;
+            background: linear-gradient(to right, #fff, #f0abfc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(217, 70, 239, 0.4);
+        }
+
+        .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--neon-cyan);
+            font-size: 1.1em;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* IMÁGENES PLACEHOLDER ESTILIZADAS */
+        .img-placeholder {
+            width: 100%;
+            height: 250px;
+            background: #1e1b4b;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #c084fc;
+            font-family: 'JetBrains Mono', monospace;
+            border: 2px dashed #9333ea;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Efecto de "Scanline" para las imágenes */
+        .img-placeholder::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.2) 3px);
+            pointer-events: none;
+        }
+
+        .img-caption {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            font-size: 0.9em;
+            margin-top: 10px;
+            z-index: 2;
+        }
+
+        .img-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 10px var(--neon-violet));
+        }
+
+        /* SECCIONES TÉCNICAS */
+        section {
+            padding: 40px 30px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            font-family: 'Exo 2', sans-serif;
+            color: var(--primary-blue);
+            font-size: 1.8em;
+            border-left: 6px solid var(--neon-violet);
+            padding-left: 15px;
+            margin-top: 0;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* TABLAS AJUSTADAS */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            min-width: 600px;
+        }
+
+        th {
+            background: var(--primary-blue);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-family: 'Exo 2';
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            background: white;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-right: 5px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-stem {
+            background: linear-gradient(135deg, #9333ea, #7e22ce);
+        }
+
+        .badge-cd {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        /* TARJETAS DE SESIÓN */
+        .session-container {
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+            background: white;
+            box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .session-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .session-header {
+            background: #f8fafc;
+            padding: 15px 25px;
+            border-bottom: 1px solid #cbd5e1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-size: 1.05em;
+        }
+
+        .session-body {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            padding: 20px 20px 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            background: #fff;
+            font-size: 0.95em;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+            overflow: visible;
+        }
+
+        /* WRAPPER INTERNO (Scroll solo cuando es necesario) */
+        .card-content {
+            overflow-x: auto;
+            width: 100%;
+            padding-bottom: 2px;
+        }
+
+        .card-content p {
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .card-label {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            padding: 3px 10px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        /* TIPOS DE TARJETA */
+        .teacher-card {
+            border-left: 4px solid var(--teacher-orange);
+            background: #fff7ed;
+        }
+
+        .teacher-card .card-label {
+            background: var(--teacher-orange);
+        }
+
+        .roadmap-card {
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+
+        .roadmap-card .card-label {
+            background: #64748b;
+        }
+
+        .practice-card {
+            border-left: 4px solid var(--practice-green);
+            background: #f0fdf4;
+        }
+
+        .practice-card .card-label {
+            background: var(--practice-green);
+        }
+
+        .solved-card {
+            border-left: 4px solid var(--solved-blue);
+            background: #eff6ff;
+        }
+
+        .solved-card .card-label {
+            background: var(--solved-blue);
+        }
+
+        .dua-card {
+            border-left: 4px solid var(--dua-purple);
+            background: #faf5ff;
+        }
+
+        .dua-card .card-label {
+            background: var(--dua-purple);
+        }
+
+        .homework-card {
+            border-left: 4px solid #334155;
+            background: #f1f5f9;
+        }
+
+        .homework-card .card-label {
+            background: #334155;
+        }
+
+        .project-card {
+            border-left: 4px solid var(--project-gold);
+            background: #fffbeb;
+        }
+
+        .project-card .card-label {
+            background: var(--project-gold);
+            color: #78350f;
+        }
+
+        /* LISTAS Y EJERCICIOS */
+        ol.exercise-list {
+            counter-reset: item;
+            padding-left: 0;
+            margin: 5px 0;
+        }
+
+        ol.exercise-list>li {
+            display: block;
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 30px;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        ol.exercise-list>li::before {
+            content: counter(item) ".";
+            counter-increment: item;
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-weight: 800;
+            color: var(--primary-blue);
+            background: #e2e8f0;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 0.75em;
+        }
+
+        ul.timeline {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0;
+        }
+
+        ul.timeline li {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+
+        .time-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+            color: var(--neon-violet);
+            background: rgba(217, 70, 239, 0.1);
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* SIMULACIÓN & EXAMEN */
+        .simulation-room {
+            background: var(--cyber-dark);
+            color: #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-top: 30px;
+            border: 1px solid #581c87;
+            position: relative;
+        }
+
+        .simulation-room::before {
+            content: "COMPLEX PLANE";
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #a855f7;
+            font-weight: 800;
+            font-size: 4em;
+            opacity: 0.1;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .simulation-room h2 {
+            color: var(--neon-cyan);
+            border-color: var(--neon-green);
+            z-index: 1;
+            position: relative;
+        }
+
+        .level-block {
+            margin-bottom: 25px;
+            border: 1px solid #581c87;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1;
+            position: relative;
+        }
+
+        .level-title {
+            font-family: 'Exo 2';
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: block;
+            font-weight: 700;
+            font-size: 1em;
+        }
+
+        .cadet {
+            border-left: 4px solid #86efac;
+        }
+
+        .cadet .level-title {
+            color: #86efac;
+        }
+
+        .officer {
+            border-left: 4px solid #facc15;
+        }
+
+        .officer .level-title {
+            color: #facc15;
+        }
+
+        .commander {
+            border-left: 4px solid #f472b6;
+        }
+
+        .commander .level-title {
+            color: #f472b6;
+        }
+
+        .specops {
+            border-left: 4px solid #a855f7;
+        }
+
+        .specops .level-title {
+            color: #a855f7;
+        }
+
+        .study-paths-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .exercise-item {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+            word-wrap: break-word;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .exercise-item::before {
+            content: "►";
+            position: absolute;
+            left: 0;
+            opacity: 0.7;
+            color: var(--neon-cyan);
+            font-size: 0.8em;
+            top: 2px;
+        }
+
+        /* Ajustes MathJax Globales */
+        mjx-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        mjx-container[display="true"] {
+            display: block;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 900px) {
+            .session-body {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                background-image: none;
+            }
+
+            .container {
+                box-shadow: none;
+                border: none;
+            }
+
+            .simulation-room {
+                background: white;
+                color: black;
+                border: 2px solid black;
+            }
+
+            .level-block {
+                border: 1px solid black;
+                color: black !important;
+                background: none;
+            }
+
+            .session-container {
+                page-break-inside: avoid;
+                border: 1px solid #ccc;
+                box-shadow: none;
+            }
+
+            header {
+                background: white;
+                color: black;
+                border-bottom: 2px solid black;
+            }
+
+            header h1 {
+                -webkit-text-fill-color: black;
+            }
+
+            .img-placeholder {
+                border: 1px solid #000;
+                color: #000;
+                background: #eee;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <a href="../index.html"
+                style="position: absolute; top: 20px; left: 30px; color: var(--neon-cyan); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.9em; display: flex; align-items: center; gap: 8px; border: 1px solid var(--neon-cyan); padding: 5px 12px; border-radius: 6px; background: rgba(0,0,0,0.3); transition: all 0.2s; z-index: 10;">←
+                Volver a Inicio</a>
+            <h1>PROYECTO PHANTOM</h1>
+            <div class="subtitle">Expansión Dimensional: Números Complejos</div>
+            <div
+                style="margin-top: 30px; display: flex; gap: 30px; font-size: 0.95em; opacity: 0.9; font-family: 'JetBrains Mono';">
+                <span style="display:flex; align-items:center;">⚡ NIVEL: 1º BACHILLERATO</span>
+                <span style="display:flex; align-items:center;">⏳ DURACIÓN: 10 SESIONES</span>
+                <span style="display:flex; align-items:center;">🎯 ENFOQUE: REALIDAD AUMENTADA</span>
+            </div>
+            <div style="margin-top: 20px; font-style: italic; color: #e2e8f0; font-family: 'Exo 2';">
+                "Para resolver lo imposible en la realidad, debemos viajar a través de lo imaginario."
+            </div>
+        </header>
+
+        <!-- SECCIÓN 01: ARQUITECTURA DIDÁCTICA -->
+        <section>
+            <h2>01. Arquitectura Didáctica (LOMLOE)</h2>
+            <p>Esta Situación de Aprendizaje (SdA) dota a los estudiantes de herramientas matemáticas para operar fuera
+                de la recta real, explorando el plano complejo como un espacio de soluciones "fantasma" que afectan al
+                mundo físico.</p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 30%">Competencias Específicas</th>
+                            <th style="width: 35%">Criterios de Evaluación</th>
+                            <th style="width: 35%">Saberes Básicos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="badge badge-stem">STEM1</span> <span
+                                    class="badge badge-stem">STEM2</span><br>
+                                <strong>CE 1. Modelización:</strong><br>
+                                Interpretar los números complejos como una extensión necesaria para resolver ecuaciones
+                                sin solución real y modelizar giros en el plano.
+                            </td>
+                            <td>
+                                <strong>1.1.</strong> Operar con números complejos en forma binómica y polar,
+                                interpretando geométricamente los resultados.<br>
+                                <strong>1.2.</strong> Utilizar la fórmula de Moivre para calcular potencias y raíces
+                                n-ésimas.
+                            </td>
+                            <td rowspan="3">
+                                <strong>El Cuerpo de los Complejos:</strong><br>
+                                • Definición ($i^2 = -1$). Forma binómica.<br>
+                                • Operaciones básicas y conjugado.<br>
+                                • Representación gráfica (Plano de Argand).<br>
+                                <br>
+                                <strong>Forma Polar y Trigonométrica:</strong><br>
+                                • Módulo y Argumento.<br>
+                                • Producto, cociente y potencias (giros).<br>
+                                • Radicación de complejos.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="badge badge-cd">CD1</span> <span class="badge badge-cd">CD3</span><br>
+                                <strong>CE 2. Resolución:</strong><br>
+                                Aplicar herramientas tecnológicas para visualizar fractales y transformaciones
+                                geométricas complejas.
+                            </td>
+                            <td>
+                                <strong>2.1.</strong> Representar gráficamente afijos, vectores y conjuntos de números
+                                complejos.<br>
+                                <strong>2.2.</strong> Resolver ecuaciones polinómicas obteniendo todas sus raíces
+                                (reales y complejas).
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 02: NARRATIVA -->
+        <section>
+            <h2>02. Contexto de Misión</h2>
+            <div class="img-placeholder" style="background: radial-gradient(circle, #2e1065 0%, #020617 100%);">
+                <div class="img-icon">🌀</div>
+                <div class="img-caption">ANOMALÍA DIMENSIONAL DETECTADA</div>
+            </div>
+            <div class="card teacher-card" style="background: #fff7ed; border-left-color: var(--neon-violet);">
+                <div class="card-label" style="background: var(--neon-violet);">Informe de Inteligencia</div>
+                <div class="card-content">
+                    <p><strong>El Escenario:</strong> El "Proyecto Phantom" investiga anomalías en el sistema energético
+                        global. Los ingenieros han descubierto que la energía fluye a través de una "Dimensión
+                        Imaginaria" que no podemos ver, pero que podemos calcular.</p>
+                    <p><strong>Rol del Alumno:</strong> Ingeniero Espectral. Tu misión es dominar el "Número i" para
+                        rastrear estas energías ocultas. Debes aprender a navegar en el Plano de Argand (mapa
+                        dimensional) para estabilizar el sistema antes de la sobrecarga.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 03: BITÁCORA DE OPERACIONES -->
+        <section>
+            <h2>03. Bitácora de Operaciones (10 Sesiones)</h2>
+
+            <!-- SESIÓN 1 -->
+            <div class="session-container">
+                <div class="session-header">
+                    <span>SESIÓN 1: La Grieta Dimensional</span>
+                    <small>Definición de i y Forma Binómica</small>
+                </div>
+                <div class="session-body">
+                    <div>
+                        <div class="card teacher-card">
+                            <div class="card-label">Guion Docente</div>
+                            <div class="card-content">
+                                <p>"Ingenieros, la ecuación $x^2 + 1 = 0$ es un callejón sin salida en el mundo real.
+                                    Pero si abrimos la puerta $i = \sqrt{-1}$, el universo se expande. Definiremos los
+                                    números complejos como $z = a + bi$ (Parte Real + Parte Imaginaria). Bienvenidos al
+                                    otro lado."</p>
+                            </div>
+                        </div>
+                        <div class="card practice-card">
+                            <div class="card-label">Banco de Actividades</div>
+                            <div class="card-content">
+                                <ol class="exercise-list">
+                                    <li>Resuelve: $x^2 + 4 = 0$ y $x^2 - 2x + 5 = 0$. Expresa las soluciones con $i$.
+                                    </li>
+                                    <li>Dados $z_1 = 3 + 2i$ y $z_2 = 1 - 4i$, calcula $z_1 + z_2$ y $3z_1 - 2z_2$.</li>
+                                    <li>Potencias de $i$: Calcula $i^3, i^4, i^{23}, i^{2024}$. Busca el patrón cíclico.
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card roadmap-card">
+                            <div class="card-label">Roadmap</div>
+                            <div class="card-content">
+                                <ul class="timeline">
+                                    <li><span class="time-tag">00-15'</span> La necesidad de $\mathbb{C}$.</li>
+                                    <li><span class="time-tag">15-35'</span> Unidad Imaginaria y Binómica.</li>
+                                    <li><span class="time-tag">35-55'</span> Operaciones lineales (Suma/Resta).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card homework-card">
+                            <div class="card-label">Tarea para Casa</div>
+                            <div class="card-content">
+                                <p><strong>Ciclo Fantasma:</strong> Calcula $i^{345}$. Justifica tu respuesta basándote
+                                    en el resto de la división entre 4.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SESIÓN 2 -->
+            <div class="session-container">
+                <div class="session-header">
+                    <span>SESIÓN 2: El Espejo Espectral</span>
+                    <small>Producto, Conjugado y División</small>
+                </div>
+                <div class="session-body">
+                    <div>
+                        <div class="card teacher-card">
+                            <div class="card-label">Guion Docente</div>
+                            <div class="card-content">
+                                <p>"Multiplicar complejos es fácil si recordáis que $i^2 = -1$. Pero dividir es
+                                    peligroso. Para eliminar la parte imaginaria del denominador, necesitamos el
+                                    'Conjugado' ($\bar{z}$). Es el reflejo del número en el espejo real. Multiplicar por
+                                    el conjugado elimina la dimensión fantasma."</p>
+                            </div>
+                        </div>
+                        <div class="card practice-card">
+                            <div class="card-label">Banco de Actividades</div>
+                            <div class="card-content">
+                                <ol class="exercise-list">
+                                    <li>Calcula $(2+3i)(4-i)$. Recuerda simplificar $i^2$.</li>
+                                    <li>Halla el conjugado de $z = 3-5i$ y calcula $z \cdot \bar{z}$. ¿Qué tipo de
+                                        número obtienes?</li>
+                                    <li>Racionalización Espectral: Calcula el inverso de $i$ ($1/i$) y divide
+                                        $\frac{2+i}{1-i}$.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card solved-card">
+                            <div class="card-label">Protocolo: División Compleja</div>
+                            <div class="card-content">
+                                <p><strong>Misión:</strong> Calcular $z = \frac{3+2i}{1-4i}$.</p>
+                                <p>1. Multiplicar numerador y denominador por el conjugado del denominador ($1+4i$):
+                                    $$z = \frac{(3+2i)(1+4i)}{(1-4i)(1+4i)}$$</p>
+                                <p>2. Operar (recordando $i^2=-1$):
+                                    $$z = \frac{3 + 12i + 2i + 8i^2}{1^2 - (4i)^2} = \frac{3 + 14i - 8}{1 - (-16)}$$</p>
+                                <p>3. Simplificar:
+                                    $$z = \frac{-5 + 14i}{17} = -\frac{5}{17} + \frac{14}{17}i$$</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SESIÓN 3 -->
+            <div class="session-container">
+                <div class="session-header">
+                    <span>SESIÓN 3: Vectores en el Vacío</span>
+                    <small>Plano de Argand y Módulo</small>
+                </div>
+                <div class="session-body">
+                    <div>
+                        <div class="card teacher-card">
+                            <div class="card-label">Guion Docente</div>
+                            <div class="card-content">
+                                <p>"Los números complejos no son solo álgebra; son geometría. Cada número $a+bi$ es un
+                                    punto (afijo) en el plano cartesiano. La parte real es el eje X, la imaginaria el
+                                    eje Y. Aprenderemos a verlos como vectores y a calcular su 'intensidad' (Módulo)."
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card practice-card">
+                            <div class="card-label">Banco de Actividades</div>
+                            <div class="card-content">
+                                <ol class="exercise-list">
+                                    <li>Representa en el plano: $z_1=3$, $z_2=-2i$, $z_3=2+2i$, $z_4=-3+i$.</li>
+                                    <li>Interpreta geométricamente la suma $(3+i) + (1-2i)$ usando la regla del
+                                        paralelogramo.</li>
+                                    <li>Calcula el módulo $|z|$ de los números anteriores.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card roadmap-card">
+                            <div class="card-label">Roadmap</div>
+                            <div class="card-content">
+                                <ul class="timeline">
+                                    <li><span class="time-tag">00-20'</span> El Plano de Argand.</li>
+                                    <li><span class="time-tag">20-40'</span> Interpretación vectorial.</li>
+                                    <li><span class="time-tag">40-55'</span> Cálculo de Módulos (Pitágoras).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card homework-card">
+                            <div class="card-label">Tarea para Casa</div>
+                            <div class="card-content">
+                                <p><strong>Mapa Estelar:</strong> Dibuja un hexágono regular centrado en el origen con
+                                    un vértice en $2+0i$. Halla las coordenadas aproximadas de los otros vértices.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SESIÓN 4 -->
+            <div class="session-container">
+                <div class="session-header">
+                    <span>SESIÓN 4: Coordenadas Polares</span>
+                    <small>Forma Polar y Trigonométrica</small>
+                </div>
+                <div class="session-body">
+                    <div>
+                        <div class="card teacher-card">
+                            <div class="card-label">Guion Docente</div>
+                            <div class="card-content">
+                                <p>"Para rotar la realidad, las coordenadas $(x, y)$ son torpes. Pasaremos al sistema
+                                    polar: Distancia ($r$) y Ángulo ($\alpha$). Todo número complejo se puede expresar
+                                    como $r_\alpha$ o $r(\cos \alpha + i \sin \alpha)$. Esto nos dará el control total
+                                    sobre los giros."</p>
+                            </div>
+                        </div>
+                        <div class="card solved-card">
+                            <div class="card-label">Protocolo: Binómica a Polar</div>
+                            <div class="card-content">
+                                <p><strong>Objetivo:</strong> Pasar $z = -1 + i$ a forma polar.</p>
+                                <p>1. <strong>Módulo ($r$):</strong>
+                                    $$r = \sqrt{(-1)^2 + 1^2} = \sqrt{2}$$</p>
+                                <p>2. <strong>Argumento ($\alpha$):</strong>
+                                    $$\tan \alpha = \frac{1}{-1} = -1$$
+                                    Como el afijo $(-1, 1)$ está en el <strong>2º Cuadrante</strong>, el ángulo no es
+                                    $-45^\circ$, sino $180^\circ - 45^\circ = 135^\circ$.</p>
+                                <p>3. <strong>Resultado:</strong> $z = \sqrt{2}_{135^\circ}$.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card practice-card">
+                            <div class="card-label">Banco de Actividades</div>
+                            <div class="card-content">
+                                <ol class="exercise-list">
+                                    <li>Pasa a forma polar: $1+i$, $-2$, $-3i$, $\sqrt{3}-i$. (Ojo a los cuadrantes).
+                                    </li>
+                                    <li>Pasa a forma binómica: $2_{60^\circ}$, $4_{180^\circ}$, $1_{270^\circ}$.</li>
+                                    <li>Escribe $z=5_{30^\circ}$ en forma trigonométrica.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SESIÓN 5 -->
+            <div class="session-container">
+                <div class="session-header">
+                    <span>SESIÓN 5: Sincronización de Frecuencias</span>
+                    <small>Producto y Cociente en Polar</small>
+                </div>
+                <div class="session-body">
+                    <div>
+                        <div class="card teacher-card">
+                            <div class="card-label">Guion Docente</div>
+                            <div class="card-content">
+                                <p>"Aquí está la magia de los complejos. Multiplicar en binómica es tedioso. En polar es
+                                    instantáneo: <strong>Multiplica los módulos y SUMA los argumentos</strong>. Dividir
+                                    es restar ángulos. Geométricamente, multiplicar por un complejo es aplicar una
+                                    rotación y una expansión (homotecia)."</p>
+                            </div>
+                        </div>
+                        <div class="card practice-card">
+                            <div class="card-label">Banco de Actividades</div>
+                            <div class="card-content">
+                                <ol class="exercise-list">
+                                    <li>Calcula en polar: $(2_{30^\circ}) \cdot (3_{60^\circ})$ y $(10_{120^\circ}) :
+                                        (2_{30^\circ})$.</li>
+                                    <li>Interpretación geométrica: Si multiplicas un número $z$ por $i$
+                                        ($1_{90^\circ}$), ¿qué le pasa al vector? (Giro de 90º).</li>
+                                    <li>Dado un cuadrado centrado en el origen con un vértice en $1+i$, halla los otros
+                                        3 multiplicando por $i$ sucesivamente.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card roadmap-card">
+                            <div class="card-label">Roadmap</div>
+                            <div class="card-content">
+                                <ul class="timeline">
+                                    <li><span class="time-tag">00-15'</span> Mecánica de operaciones polares.</li>
+                                    <li><span class="time-tag">15-40'</span> Interpretación geométrica (Giros).</li>
+                                    <li><span class="time-tag">40-55'</span> Ejercicios de rotación de figuras.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card homework-card">
+                            <div class="card-label">Tarea para Casa</div>
+                            <div class="card-content">
+                                <p><strong>El Reloj:</strong> Un vector apunta a las 3 en punto (ángulo 0). Si lo
+                                    multiplicamos por un número de argumento $30^\circ$ doce veces, ¿dónde acaba?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SESIÓN 6 -->
+            <div class="session-container">
+                <div class="session-header">
+                    <span>SESIÓN 6: El Protocolo Moivre</span>
+                    <small>Potencias y Fórmula de Moivre</small>
+                </div>
+                <div class="session-body">
+                    <div>
+                        <div class="card teacher-card">
+                            <div class="card-label">Guion Docente</div>
+                            <div class="card-content">
+                                <p>"¿Calcular $(1+i)^{10}$ multiplicando 10 veces? Inviable. Usaremos el Protocolo
+                                    Moivre. Pasamos a polar, elevamos el módulo a $n$ y multiplicamos el ángulo por $n$.
+                                    Esto nos permite saltar a cualquier punto de la espiral logarítmica
+                                    instantáneamente."</p>
+                            </div>
+                        </div>
+                        <div class="card solved-card">
+                            <div class="card-label">Protocolo: Potencia Elevada</div>
+                            <div class="card-content">
+                                <p><strong>Misión:</strong> Calcular $(1-\sqrt{3}i)^6$.</p>
+                                <p>1. <strong>A Polar:</strong> Módulo $r=\sqrt{1+3}=2$. Argumento $\tan \alpha =
+                                    -\sqrt{3}$ en 4º cuad. $\to 300^\circ$ (o $-60^\circ$). $z = 2_{300^\circ}$.</p>
+                                <p>2. <strong>Potencia:</strong> $z^6 = (2^6)_{6 \cdot 300^\circ} = 64_{1800^\circ}$.
+                                </p>
+                                <p>3. <strong>Reducción Ángulo:</strong> $1800 : 360 = 5$ (Exacto). El ángulo es
+                                    $0^\circ$.</p>
+                                <p>4. <strong>Resultado:</strong> $z^6 = 64_{0^\circ} = 64$ (Un número real puro).</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card practice-card">
+                            <div class="card-label">Banco de Actividades</div>
+                            <div class="card-content">
+                                <ol class="exercise-list">
+                                    <li>Calcula $(1+i)^8$ usando Moivre.</li>
+                                    <li>Comprueba la identidad trigonométrica $\cos(2x)$ usando $(\cos x + i \sin x)^2$.
+                                    </li>
+                                    <li>¿Para qué valor de $n$ la potencia $(1+i)^n$ es un número real positivo?</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SESIÓN 7 -->
+            <div class="session-container">
+                <div class="session-header">
+                    <span>SESIÓN 7: Fragmentación de Realidad</span>
+                    <small>Raíces de Complejos</small>
+                </div>
+                <div class="session-body">
+                    <div>
+                        <div class="card teacher-card">
+                            <div class="card-label">Guion Docente</div>
+                            <div class="card-content">
+                                <p>"En el mundo real, $\sqrt[3]{1} = 1$. En el mundo Phantom, hay 3 soluciones. La
+                                    radicación compleja divide la circunferencia en $n$ partes iguales. Las raíces de un
+                                    número forman siempre un polígono regular. Aprenderemos a encontrar estas 'raíces
+                                    ocultas'."</p>
+                            </div>
+                        </div>
+                        <div class="card practice-card">
+                            <div class="card-label">Banco de Actividades</div>
+                            <div class="card-content">
+                                <ol class="exercise-list">
+                                    <li>Halla las tres raíces cúbicas de $8$ ($8_{0^\circ}$). Represéntalas
+                                        gráficamente.</li>
+                                    <li>Calcula $\sqrt[4]{-16}$. (Pista: $-16 = 16_{180^\circ}$).</li>
+                                    <li>Resuelve la ecuación $x^6 - 1 = 0$ en $\mathbb{C}$.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card roadmap-card">
+                            <div class="card-label">Roadmap</div>
+                            <div class="card-content">
+                                <ul class="timeline">
+                                    <li><span class="time-tag">00-20'</span> Fórmula de la radicación ($k=0,1...n-1$).
+                                    </li>
+                                    <li><span class="time-tag">20-40'</span> Interpretación gráfica (Polígonos).</li>
+                                    <li><span class="time-tag">40-55'</span> Resolución de ecuaciones binómicas.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SESIONES 8: TALLER DIGITAL -->
+            <div class="session-container" style="border: 2px solid var(--dua-purple);">
+                <div class="session-header" style="background: #faf5ff; color: var(--dua-purple);">
+                    <span>SESIÓN 8: Generador de Fractales</span>
+                    <small>GeoGebra / Julia Sets</small>
+                </div>
+                <div class="session-body">
+                    <div>
+                        <div class="card teacher-card"
+                            style="border-left-color: var(--dua-purple); background: #fdfaff;">
+                            <div class="card-label" style="background: var(--dua-purple);">Tech Briefing</div>
+                            <div class="card-content">
+                                <p>"Los números complejos generan las estructuras más bellas del universo matemático:
+                                    los Fractales. Usaremos GeoGebra para visualizar iteraciones de $z_{n+1} = z_n^2 +
+                                    c$. Veremos cómo el caos emerge del orden en el conjunto de Mandelbrot."</p>
+                            </div>
+                        </div>
+                        <div class="card practice-card">
+                            <div class="card-label">Protocolo Digital</div>
+                            <div class="card-content">
+                                <ol class="exercise-list">
+                                    <li><strong>Iteración Manual:</strong> Elige $c=0.5i$ y $z_0=0$. Calcula las
+                                        primeras 5 iteraciones. ¿Se aleja o se estabiliza?</li>
+                                    <li><strong>GeoGebra:</strong> Usa una hoja de cálculo para iterar 100 veces.
+                                        Colorea según la velocidad de escape.</li>
+                                    <li><strong>Polígonos:</strong> Dibuja las raíces quintas de la unidad y únelas para
+                                        formar un pentágono.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SESIONES 9-10: PROYECTO (DESGLOSADO Y EXPANDIDO) -->
+            <div class="session-container" style="border: 2px solid var(--project-gold);">
+                <div class="session-header" style="background: #fffbeb; color: #b45309;">
+                    <span>SESIONES 9-10: OPERACIÓN "HORIZONTE FRACTAL"</span>
+                    <small>Proyecto Final Integrado</small>
+                </div>
+
+                <!-- NARRATIVA INTERNA DE LA MINI-SdA -->
+                <div class="session-body" style="grid-template-columns: 1fr;">
+                    <div class="card teacher-card" style="border-left-color: var(--project-gold); background: #fffdf5;">
+                        <div class="card-label" style="background: var(--project-gold); color: #78350f;">Briefing de
+                            Misión Crítica</div>
+                        <div class="card-content">
+                            <p><strong>Situación:</strong> Una singularidad matemática auto-replicante (Fractal) amenaza
+                                con desbordar los servidores de PHANTOM.
+                                <br><strong>Objetivo:</strong> Tienes 180 minutos (2 sesiones) para desarrollar una
+                                solución.
+                            </p>
+                            <p><strong>Elige tu especialidad:</strong></p>
+                            <ul>
+                                <li><strong>División Estética (Opción A):</strong> Mapear la singularidad (Arte
+                                    Fractal).</li>
+                                <li><strong>División Ingeniería (Opción B):</strong> Construir un filtro de contención
+                                    (Circuitos CA).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- VISUAL HIGH QUALITY PLACEHOLDER 1 -->
+                    <div class="img-placeholder" style="background: linear-gradient(135deg, #240b36 0%, #c31432 100%);">
+                        <div class="img-icon">⚛️</div>
+                        <div class="img-caption">ANOMALÍA DETECTADA: SET DE JULIA</div>
+                    </div>
+                </div>
+
+                <!-- HOJA DE RUTA DETALLADA -->
+                <div class="session-body">
+                    <div>
+                        <h3
+                            style="color: var(--project-gold); font-family: 'Exo 2'; border-bottom: 2px solid var(--project-gold); padding-bottom: 10px;">
+                            FASE 1: INVESTIGACIÓN (SESIÓN 9 - 55')</h3>
+
+                        <div class="card practice-card">
+                            <div class="card-label">Paso 1: El Algoritmo Semilla (Común)</div>
+                            <div class="card-content">
+                                <p>Todos los agentes deben dominar la iteración compleja.</p>
+                                <ol class="exercise-list">
+                                    <li>Dada la función $f(z) = z^2 + c$, con $c = -1$.</li>
+                                    <li>Calcula la órbita de $z_0 = 0$:
+                                        <br> $z_1 = 0^2 - 1 = -1$
+                                        <br> $z_2 = (-1)^2 - 1 = 0$
+                                        <br> $z_3 = ...$ (¿Es estable o caótica?)
+                                    </li>
+                                    <li>Prueba con $c = 1$. ¿Qué pasa con el módulo $|z_n|$? (Escape al infinito).</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="card solved-card">
+                            <div class="card-label">Opción A: Cartografía Fractal</div>
+                            <div class="card-content">
+                                <p><strong>Herramienta:</strong> GeoGebra / Python / Papel Milimetrado.</p>
+                                <p>1. <strong>Define tu Constante:</strong> Elige un número complejo $c$ (ej: $0.3 +
+                                    0.5i$).</p>
+                                <p>2. <strong>Itera puntos del plano:</strong> Para cada punto $z_0$ en una cuadrícula,
+                                    itera 10 veces.</p>
+                                <p>3. <strong>Código de Color:</strong>
+                                    <br>- Si $|z_{10}| < 2$: Pinta NEGRO (Prisionero). <br>- Si $|z_{10}| > 2$: Pinta
+                                        COLOR (Escapista).
+                                </p>
+                                <p><strong>Entregable:</strong> Una imagen generada y la explicación matemática de la
+                                    convergencia.</p>
+                            </div>
+                        </div>
+
+                        <div class="card solved-card">
+                            <div class="card-label">Opción B: Filtro de Resonancia</div>
+                            <div class="card-content">
+                                <p><strong>Herramienta:</strong> Simulador de Circuitos / Calculadora Compleja.</p>
+                                <p>1. <strong>El Circuito:</strong> Un circuito RLC en serie con Fuente $V =
+                                    10_{0^\circ}$, $R=100\Omega$, $L=0.5H$, $C=10\mu F$. Frecuencia $\omega = 100
+                                    rad/s$.</p>
+                                <p>2. <strong>Cálculo de Impedancias ($Z$):</strong>
+                                    <br>- $Z_R = 100$
+                                    <br>- $Z_L = i\omega L = 50i$
+                                    <br>- $Z_C = \frac{1}{i\omega C} = -1000i$
+                                </p>
+                                <p>3. <strong>Impedancia Total:</strong> Suma compleja $Z_{total} = R + i(\omega L -
+                                    \frac{1}{\omega C})$.</p>
+                                <p><strong>Entregable:</strong> Cálculo de la corriente $I = V/Z_{total}$ (Módulo y
+                                    Fase) y diagrama de fasores.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3
+                            style="color: var(--project-gold); font-family: 'Exo 2'; border-bottom: 2px solid var(--project-gold); padding-bottom: 10px;">
+                            FASE 2: EJECUCIÓN (SESIÓN 10 - 55')</h3>
+
+                        <div class="card roadmap-card">
+                            <div class="card-label">Cronograma Final</div>
+                            <div class="card-content">
+                                <ul class="timeline">
+                                    <li><span class="time-tag">00-20'</span> Finalización de cálculos/renderizado.</li>
+                                    <li><span class="time-tag">20-40'</span> Preparación del Informe "Phantom".</li>
+                                    <li><span class="time-tag">40-55'</span> Defensa Oral (Debriefing).</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- VISUAL HIGH QUALITY PLACEHOLDER 2 -->
+                        <div class="img-placeholder"
+                            style="background: radial-gradient(circle, #0f172a 0%, #1e293b 100%); height: 220px;">
+                            <div class="img-icon">⚡</div>
+                            <div class="img-caption">ESQUEMA DE FILTRO RLC COMPLEJO</div>
+                        </div>
+
+                        <div class="card homework-card">
+                            <div class="card-label">Rúbrica del Proyecto</div>
+                            <div class="card-content">
+                                <p><strong>1. Precisión Matemática (40%):</strong> Cálculos complejos sin errores.</p>
+                                <p><strong>2. Visualización (30%):</strong> Calidad del gráfico fractal o diagrama
+                                    fasorial.</p>
+                                <p><strong>3. Interpretación (30%):</strong> Explicación física/geométrica del fenómeno.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SECCIÓN 04: EVALUACIÓN -->
+        <section>
+            <h2>04. Sistema de Calificación</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 15%">Criterio Eval. (LOMLOE)</th>
+                            <th style="width: 15%">Peso (%)</th>
+                            <th style="width: 70%">Instrumentos de Calificación Relacionados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CE 1.1</strong></td>
+                            <td><strong>30%</strong></td>
+                            <td>
+                                <ul>
+                                    <li>Prueba Escrita (Operaciones en binómica y polar).</li>
+                                    <li>Drill de cálculo mental (conjugados, potencias de i).</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>CE 1.2</strong></td>
+                            <td><strong>30%</strong></td>
+                            <td>
+                                <ul>
+                                    <li>Examen Final (Ejercicios de Moivre y Radicación).</li>
+                                    <li>Representación gráfica de raíces.</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>CE 2.1</strong></td>
+                            <td><strong>20%</strong></td>
+                            <td>
+                                <ul>
+                                    <li>Representación gráfica en el plano de Argand (Sesión 3).</li>
+                                    <li>Interpretación de giros y transformaciones (Sesión 5).</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>CE 2.2</strong></td>
+                            <td><strong>20%</strong></td>
+                            <td>
+                                <ul>
+                                    <li>Proyecto Final (Operación Horizonte Fractal).</li>
+                                    <li>Resolución de ecuaciones polinómicas $z^n = k$.</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 05: SALA DE SIMULACIÓN -->
+        <section class="simulation-room">
+            <h2>05. Sala de Simulación (20 Niveles)</h2>
+
+            <div class="study-paths-grid">
+                <!-- NIVEL 1: CADETE -->
+                <div class="level-block cadet">
+                    <span class="level-title">NIVEL 1: CADETE (Conceptos)</span>
+                    <div class="card-content">
+                        <div class="exercise-item">1. Calcula $i^{17}$.</div>
+                        <div class="exercise-item">2. Suma $(3-i) + (2+5i)$.</div>
+                        <div class="exercise-item">3. Halla el conjugado de $-4+3i$.</div>
+                        <div class="exercise-item">4. Representa gráficamente $z=2-2i$.</div>
+                        <div class="exercise-item">5. Resuelve $x^2 + 9 = 0$.</div>
+                    </div>
+                </div>
+
+                <!-- NIVEL 2: OFICIAL -->
+                <div class="level-block officer">
+                    <span class="level-title">NIVEL 2: OFICIAL (Operaciones)</span>
+                    <div class="card-content">
+                        <div class="exercise-item">6. Calcula y simplifica $(2-i)^2$.</div>
+                        <div class="exercise-item">7. Divide $\frac{1+i}{1-i}$.</div>
+                        <div class="exercise-item">8. Pasa a polar $z = -3$.</div>
+                        <div class="exercise-item">9. Pasa a binómica $2_{270^\circ}$.</div>
+                        <div class="exercise-item">10. Calcula el módulo de $3-4i$.</div>
+                    </div>
+                </div>
+
+                <!-- NIVEL 3: COMANDANTE -->
+                <div class="level-block commander">
+                    <span class="level-title">NIVEL 3: COMANDANTE (Polar)</span>
+                    <div class="card-content">
+                        <div class="exercise-item">11. Calcula $(2_{20^\circ})^3 \cdot (1_{30^\circ})$.</div>
+                        <div class="exercise-item">12. Divide $6_{150^\circ} : 2_{60^\circ}$.</div>
+                        <div class="exercise-item">13. Pasa a polar $z = -1 - i$ (Cuidado cuadrante).</div>
+                        <div class="exercise-item">14. Halla $k$ para que $(2+ki)(1-i)$ sea Real puro.</div>
+                        <div class="exercise-item">15. Usa Moivre para $(1+i)^{10}$.</div>
+                    </div>
+                </div>
+
+                <!-- NIVEL 4: SPECOPS -->
+                <div class="level-block specops">
+                    <span class="level-title">NIVEL 4: SPECOPS (Raíces)</span>
+                    <div class="card-content">
+                        <div class="exercise-item">16. Halla las raíces cuartas de 16.</div>
+                        <div class="exercise-item">17. Resuelve $z^3 + 8i = 0$.</div>
+                        <div class="exercise-item">18. Expresa $\cos(3x)$ en función de $\cos x$ usando complejos.</div>
+                        <div class="exercise-item">19. Halla vértices cuadrado centrado origen si uno es $3+i$.</div>
+                        <div class="exercise-item">20. Resuelve $z^2 - 2z + 2 = 0$.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 06: NEURAL LINKS -->
+        <section>
+            <h2>06. Neural Links (Recursos)</h2>
+            <div class="card roadmap-card">
+                <div class="card-label">Soporte Externo</div>
+                <div class="card-content">
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="margin-bottom: 10px;">📺 <strong>YouTube:</strong> "Veritasium - La historia de los
+                            números imaginarios" (Contexto histórico).</li>
+                        <li style="margin-bottom: 10px;">📺 <strong>YouTube:</strong> "Matemáticas Profe Alex - Números
+                            Complejos" (Curso completo).</li>
+                        <li style="margin-bottom: 10px;">🤖 <strong>Prompt IA:</strong> "Actúa como Euler y explícame
+                            por qué $e^{i\pi} + 1 = 0$ es la ecuación más bella del mundo".</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ANEXO: EXAMEN -->
+        <section style="page-break-before: always; background: white; color: black; border-top: 5px solid black;">
+            <div style="border: 2px solid black; padding: 40px; font-family: 'Times New Roman', serif;">
+                <div style="text-align: center; border-bottom: 2px solid black; margin-bottom: 30px;">
+                    <h3 style="margin:0;">CERTIFICACIÓN NIVEL 1: NÚMEROS COMPLEJOS</h3>
+                    <p>CÓDIGO: PHANTOM-FINAL // TIEMPO: 90 MIN</p>
+                </div>
+
+                <p style="margin-bottom: 20px;"><strong>Ejercicio 1 (2 ptos).</strong> Dados los números complejos $z_1
+                    = 2 - 3i$ y $z_2 = 1 + 4i$:<br>
+                    a) Calcula $2z_1 - z_2$.<br>
+                    b) Calcula y simplifica el producto $z_1 \cdot z_2$.<br>
+                    c) Calcula la división $\frac{z_1}{z_2}$.</p>
+
+                <p style="margin-bottom: 20px;"><strong>Ejercicio 2 (2 ptos).</strong> Halla el valor de $k$ para que el
+                    producto $(3+ki)(1-2i)$ sea:<br>
+                    a) Un número imaginario puro.<br>
+                    b) Un número real.</p>
+
+                <p style="margin-bottom: 20px;"><strong>Ejercicio 3 (2 ptos).</strong> Dado el número complejo $z = -2 +
+                    2i$:<br>
+                    a) Represéntalo gráficamente.<br>
+                    b) Pásalo a forma polar (calcula módulo y argumento).<br>
+                    c) Calcula $z^6$ usando la fórmula de Moivre.</p>
+
+                <p style="margin-bottom: 20px;"><strong>Ejercicio 4 (2.5 ptos). Radicación.</strong> Calcula las raíces
+                    cúbicas de $-27$. Expresa los resultados en forma polar y binómica, y represéntalos gráficamente
+                    (¿qué figura forman?).</p>
+
+                <p style="margin-bottom: 20px;"><strong>Ejercicio 5 (1.5 ptos).</strong> Resuelve la ecuación de segundo
+                    grado en el campo complejo: $z^2 - 4z + 13 = 0$.</p>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+
+</html>
