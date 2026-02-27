@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 3: Técnicas de Recuento y Combinatoria</title>
+
+    <!-- PWA Manifest & Icons -->
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icon-512.png">
+    <meta name="theme-color" content="#4338ca">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax for rendering LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)'], ['$', '$']],
+                displayMath: [['\\[', '\\]'], ['$$', '$$']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            /* Variables de entorno y colores */
+            --primary: #4338ca;
+            --primary-light: #6366f1;
+            --primary-dark: #312e81;
+            --bg-color: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --sidebar-bg: #ffffff;
+            --box-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
+            /* Colores específicos de cajas */
+            --def-border: #10b981;
+            --def-bg: #f0fdf4;
+            --def-icon: #047857;
+            
+            --ex-border: #3b82f6;
+            --ex-bg: #eff6ff;
+            --ex-icon: #1d4ed8;
+
+            /* Nuevos colores para Teoremas y Propiedades */
+            --theo-border: #ef4444;
+            --theo-bg: #fef2f2;
+            --theo-icon: #b91c1c;
+
+            --prop-border: #f59e0b;
+            --prop-bg: #fffbeb;
+            --prop-icon: #b45309;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow-sm);
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            line-height: 1.2;
+        }
+
+        /* --- LOGO CSS INTEGRADO --- */
+        .css-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+            user-select: none;
+        }
+        
+        .css-logo span { 
+            color: #facc15; 
+            margin-left: 2px; 
+        } 
+        
+        .css-logo-small {
+            width: 45px;
+            height: 45px;
+            font-size: 1.4rem;
+        }
+        
+        .css-logo-large {
+            width: 80px;
+            height: 80px;
+            font-size: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.60rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover {
+            background-color: #f1f5f9;
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            background-color: #e0e7ff;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: 280px;
+            padding: 3rem 4rem;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.125rem;
+            margin-top: 0.5rem;
+        }
+
+        .author-tag {
+            display: inline-block;
+            background-color: #e2e8f0;
+            color: #475569;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 3rem;
+        }
+
+        section h2 {
+            font-size: 1.875rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        section h3 {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* --- BOXES (Definition, Example, Theorem, Property) --- */
+        .box {
+            background-color: var(--box-bg);
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border-left: 5px solid transparent;
+            position: relative;
+        }
+
+        .box.definition { border-left-color: var(--def-border); background-color: var(--def-bg); }
+        .box.example { border-left-color: var(--ex-border); background-color: var(--ex-bg); }
+        .box.theorem { border-left-color: var(--theo-border); background-color: var(--theo-bg); }
+        .box.property { border-left-color: var(--prop-border); background-color: var(--prop-bg); }
+
+        .box-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .box.definition .box-title { color: var(--def-icon); }
+        .box.example .box-title { color: var(--ex-icon); }
+        .box.theorem .box-title { color: var(--theo-icon); }
+        .box.property .box-title { color: var(--prop-icon); }
+
+        .box p { margin-bottom: 1rem; }
+        .box p:last-child { margin-bottom: 0; }
+        .box ul, .box ol { margin-left: 20px; margin-bottom: 1rem; }
+
+        /* --- PROOF / SOLUTION BUTTON & CONTENT --- */
+        .proof-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            border: 1px solid;
+        }
+
+        /* Colores contextuales para los botones de demostración */
+        .box.definition .proof-btn {
+            background-color: #dcfce7;
+            border-color: #86efac;
+            color: var(--def-icon);
+        }
+        .box.definition .proof-btn:hover {
+            background-color: var(--def-icon);
+            color: white;
+            border-color: var(--def-icon);
+        }
+
+        .box.example .proof-btn {
+            background-color: #dbeafe;
+            border-color: #93c5fd;
+            color: var(--ex-icon);
+        }
+        .box.example .proof-btn:hover {
+            background-color: var(--ex-icon);
+            color: white;
+            border-color: var(--ex-icon);
+        }
+
+        .box.theorem .proof-btn {
+            background-color: #fee2e2;
+            border-color: #fca5a5;
+            color: var(--theo-icon);
+        }
+        .box.theorem .proof-btn:hover {
+            background-color: var(--theo-icon);
+            color: white;
+            border-color: var(--theo-icon);
+        }
+
+        .box.property .proof-btn {
+            background-color: #ffedd5;
+            border-color: #fdba74;
+            color: var(--prop-icon);
+        }
+        .box.property .proof-btn:hover {
+            background-color: var(--prop-icon);
+            color: white;
+            border-color: var(--prop-icon);
+        }
+
+        .proof-content {
+            display: none;
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            border: 1px dashed var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        /* MathJax overflow handling */
+        mjx-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { width: 240px; }
+            .main-content { margin-left: 240px; padding: 2rem; }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                position: relative; 
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content { 
+                margin-left: 0; 
+                padding: 1.5rem; 
+            }
+            .nav-link { display: inline-block; margin-right: 0.5rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MENÚ LATERAL -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <div class="css-logo css-logo-small">J<span>&pi;</span></div>
+            <span>Combinatoria</span>
+        </div>
+        <a href="#intro" class="nav-link active">1. Introducción</a>
+        <a href="#principios" class="nav-link">2. Principios Fundamentales</a>
+        <a href="#variaciones" class="nav-link">3. Variaciones</a>
+        <a href="#permutaciones" class="nav-link">4. Permutaciones</a>
+        <a href="#combinaciones" class="nav-link">5. Combinaciones</a>
+        <a href="#binomio" class="nav-link">6. Binomio de Newton</a>
+        <a href="#aplicaciones" class="nav-link">7. Aplicaciones</a>
+        <a href="#conclusion" class="nav-link">8. Conclusión</a>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        <header class="page-header" style="display: flex; align-items: center; gap: 1.5rem;">
+            <div class="css-logo css-logo-large">J<span>&pi;</span></div>
+            <div>
+                <h1>Técnicas de Recuento y Combinatoria</h1>
+                <p>Matemáticas II</p>
+                <span class="author-tag"><i class="fa-solid fa-user-pen"></i> José A. Martínez Martínez</span>
+            </div>
+        </header>
+
+        <!-- SECCIÓN 1: INTRODUCCIÓN -->
+        <section id="intro">
+            <h2><span class="section-number">1</span> Introducción Histórica y Conceptual</h2>
+            
+            <p>La Combinatoria, entendida como la rama de las matemáticas que estudia las configuraciones finitas, posee raíces profundas en la historia del pensamiento matemático. Aunque el acto de contar es primitivo e intuitivo, la formalización rigurosa de estas técnicas es un hecho relativamente reciente.</p>
+            
+            <p>Los antecedentes históricos de esta disciplina se remontan al Oriente, donde ya se realizaba el estudio de patrones numéricos avanzados, como los que aparecen en el Triángulo Aritmético (conocido posteriormente en Occidente como Triángulo de Pascal). Sin embargo, la consolidación de la Combinatoria como disciplina matemática autónoma ocurre en el siglo XVII en Occidente. Son figuras clave Blaise Pascal y Pierre de Fermat, quienes vincularon el análisis combinatorio al incipiente cálculo de probabilidades mediante el estudio de los juegos de azar.</p>
+
+            <p>Posteriormente, Gottfried Leibniz generalizó el binomio de Newton al caso multinomial y Jakob Bernoulli, en su obra póstuma <em>Ars Conjectandi</em> (1713), sistematizó de manera formal las técnicas de permutaciones y combinaciones, sentando las bases de la teoría moderna.</p>
+
+            <p>Ya en el siglo XIX, matemáticos como Dirichlet introdujeron principios lógicos fundamentales, como el Principio del Palomar, que permitieron demostrar teoremas de existencia cruciales en la teoría de números y otras áreas. En este tema, desarrollaremos axiomáticamente las técnicas de recuento, demostrando el origen de cada fórmula a partir de la teoría de conjuntos y el uso de aplicaciones biyectivas.</p>
+        </section>
+
+        <!-- SECCIÓN 2: PRINCIPIOS FUNDAMENTALES -->
+        <section id="principios">
+            <h2><span class="section-number">2</span> Principios Fundamentales de Recuento</h2>
+            <p>El fundamento del análisis combinatorio reside en dos principios básicos sobre el cardinal de conjuntos finitos y sus operaciones.</p>
+
+            <h3>2.1. Principio de Adición</h3>
+            <p>Este principio formaliza la idea de que si una tarea puede realizarse de varias formas alternativas y disjuntas, el total de opciones es la suma de las opciones de cada alternativa.</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-scroll"></i> Teorema 2.1: Principio de Adición</div>
+                <p>Sean $A_{1},A_{2},...,A_{n}$ conjuntos finitos tales que son disjuntos dos a dos $(A_{i}\cap A_{j}=\emptyset,\forall i\ne j)$. El cardinal de su unión es la suma de sus cardinales:</p>
+                $$|\bigcup_{i=1}^{n}A_{i}|=\sum_{i=1}^{n}|A_{i}|$$
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Procedemos por inducción sobre $n$. Para $n=2$, sean $A$ y $B$ conjuntos disjuntos. Si contamos los elementos de $A$ y luego los de $B$, al no haber elementos comunes, hemos contado cada elemento de $A\cup B$ una única vez. Por tanto, $|A\cup B|=|A|+|B|$.</p>
+                    <p>Suponiendo cierto para $n-1$, consideramos $n$ conjuntos disjuntos:</p>
+                    $$\bigcup_{i=1}^{n}A_{i}=(\bigcup_{i=1}^{n-1}A_{i})\cup A_{n}$$
+                    <p>Dado que $A_{n}$ es disjunto de todos los anteriores, también lo es de su unión. Aplicando el caso base y la hipótesis de inducción:</p>
+                    $$
+                    \begin{aligned}
+                    |\bigcup_{i=1}^{n}A_{i}| &= |\bigcup_{i=1}^{n-1}A_{i}|+|A_{n}| \\
+                    &= (\sum_{i=1}^{n-1}|A_{i}|)+|A_{n}| \\
+                    &= \sum_{i=1}^{n}|A_{i}|
+                    \end{aligned}
+                    $$
+                </div>
+            </div>
+
+            <h3>2.2. Principio de la Multiplicación (Producto Cartesiano)</h3>
+            <p>Este principio modela experimentos secuenciales o compuestos.</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-scroll"></i> Teorema 2.2: Principio de la Multiplicación</div>
+                <p>Sean $S_{1},S_{2},...,S_{n}$ conjuntos finitos no vacíos. El cardinal de su producto cartesiano es:</p>
+                $$|S_{1}\times S_{2}\times\cdot\cdot\cdot\times S_{n}|=\prod_{i=1}^{n}|S_{i}|$$
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Para $n=2$, sean $S_{1}=\{x_{1},...,x_{m}\}$ y $S_{2}=\{y_{1},...,y_{p}\}$. El producto cartesiano $S_{1}\times S_{2}$ consiste en pares ordenados $(x_{i},y_{j})$. Podemos organizar estos pares en una matriz rectangular de $m$ filas y $p$ columnas. El número total de entradas es la suma de $p$ elementos repetida $m$ veces:</p>
+                    $$\sum_{i=1}^{m}|S_{2}|=m\cdot p=|S_{1}|\cdot|S_{2}|$$
+                    <p>El caso general se demuestra por inducción, considerando $S_{1}\times\cdot\cdot\cdot\times S_{n}\cong(S_{1}\times\cdot\cdot\cdot\times S_{n-1})\times S_{n}$.</p>
+                </div>
+            </div>
+
+            <h3>2.3. Principio de Dirichlet (El Palomar)</h3>
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-scroll"></i> Teorema 2.3: Principio de Dirichlet</div>
+                <p>Si se distribuyen $m$ objetos en $n$ cajas (contenedores) y $m \gt n$, entonces existe al menos una caja que contiene más de un objeto (al menos 2).</p>
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Por reducción al absurdo. Sea $x_{i}$ el número de objetos en la caja $i$, para $i=1,...,n$. Supongamos que ninguna caja contiene más de un objeto, es decir, $x_{i}\le1$ para todo $i$. Sumando el total de objetos:</p>
+                    $$\sum_{i=1}^{n}x_{i}\le\sum_{i=1}^{n}1=n$$
+                    <p>Sin embargo, la hipótesis establece que el número total de objetos es $m \gt n$. Llegamos a una contradicción $(m\le n)$, por lo que la suposición inicial es falsa y debe existir algún $x_{i}\ge2$.</p>
+                </div>
+            </div>
+
+            <h3>2.4. Principio de Inclusión-Exclusión</h3>
+            <p>Cuando los conjuntos no son disjuntos, el principio de adición cuenta los elementos comunes múltiples veces. Este principio corrige el conteo restando intersecciones.</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-scroll"></i> Teorema 2.4: Fórmula de la Criba</div>
+                <p>Para una familia de conjuntos finitos $A_{1},...,A_{n}$</p>
+                $$|\bigcup_{i=1}^{n}A_{i}|=\sum_{1\le i\le n}|A_{i}|-\sum_{1\le i \lt j\le n}|A_{i}\cap A_{j}|+\cdot\cdot\cdot+(-1)^{n+1}|\bigcap_{i=1}^{n}A_{i}|$$
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Consideremos un elemento $x$ que pertenece exactamente a $k$ de los conjuntos $A_{i}$. Debemos demostrar que este elemento se cuenta exactamente una vez en el lado derecho de la fórmula.</p>
+                    <ul>
+                        <li>En la primera suma, $x$ se cuenta $\binom{k}{1}$ veces.</li>
+                        <li>En la segunda suma, $x$ se cuenta $\binom{k}{2}$ veces.</li>
+                        <li>En general, en la $r$-ésima suma, se cuenta $\binom{k}{r}$ veces.</li>
+                    </ul>
+                    <p>La contribución total de $x$ es:</p>
+                    $$S=\binom{k}{1}-\binom{k}{2}+\binom{k}{3}-\cdot\cdot\cdot+(-1)^{k+1}\binom{k}{k}$$
+                    <p>Sabemos por el desarrollo del binomio de Newton para $(1-1)^{k}$ que:</p>
+                    $$\sum_{r=0}^{k}(-1)^{r}\binom{k}{r}=0 \Rightarrow \binom{k}{0}-\binom{k}{1}+\binom{k}{2}-\cdot\cdot\cdot=0$$
+                    <p>Como $\binom{k}{0}=1$, tenemos:</p>
+                    $$1 - \left( \binom{k}{1}-\binom{k}{2}+\binom{k}{3}-\cdot\cdot\cdot \right) = 0 \Rightarrow 1-S=0 \Rightarrow S=1$$
+                    <p>Por tanto, cada elemento de la unión se contabiliza una única vez.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: VARIACIONES -->
+        <section id="variaciones">
+            <h2><span class="section-number">3</span> Variaciones</h2>
+            <p>Las variaciones estudian las agrupaciones donde influye el orden y no necesariamente se toman todos los elementos.</p>
+
+            <h3>3.1. Variaciones Ordinarias (Sin Repetición)</h3>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición 3.1: Variaciones Ordinarias</div>
+                <p>Dado un conjunto $A$ con $m$ elementos, una variación ordinaria de orden $n$ (con $n\le m$) es una $n$-upla ordenada $(x_{1},x_{2},...,x_{n})$ donde $x_{i}\in A$ y $x_{i}\ne x_{j}$ si $i\ne j$.</p>
+                <p><strong>Fórmula:</strong></p>
+                $$V_{m,n}=\frac{m!}{(m-n)!}$$
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Queremos construir una secuencia ordenada de longitud $n$ utilizando elementos de un conjunto de tamaño $m$, sin repetir ninguno.</p>
+                    <ol>
+                        <li>Para la primera posición, tenemos $m$ opciones.</li>
+                        <li>Para la segunda posición, como no podemos repetir el elemento usado, quedan $m-1$ opciones.</li>
+                        <li>Para la tercera posición, quedan $m-2$ opciones.</li>
+                        <li>...</li>
+                        <li>Para la $n$-ésima posición, hemos usado ya $n-1$ elementos, por lo que quedan $m-(n-1)=m-n+1$ opciones.</li>
+                    </ol>
+                    <p>Aplicando el Principio de la Multiplicación:</p>
+                    $$V_{m,n}=m\cdot(m-1)\cdot(m-2)\cdot\cdot\cdot\cdot(m-n+1)$$
+                    <p>Multiplicando y dividiendo por $(m-n)!$</p>
+                    $$V_{m,n}=\frac{m\cdot(m-1)\cdot\cdot\cdot(m-n+1)\cdot(m-n)!}{(m-n)!}=\frac{m!}{(m-n)!}$$
+                </div>
+            </div>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo 3.2: Formación de un comité de aula</div>
+                <p>Se desea formar un comité con delegado, vocal y secretario (cargos distintos) de una clase de 40 alumnos. Importa el orden y no hay repetición.</p>
+                $$V_{40,3} = 40 \cdot 39 \cdot 38 = 59.280 \text{ formas.}$$
+            </div>
+
+            <h3>3.2. Variaciones con Repetición</h3>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición 3.3: Variaciones con Repetición</div>
+                <p>Una variación con repetición de $m$ elementos tomados de $n$ en $n$ es una $n$-upla ordenada de elementos de $A$, donde se permite que $x_{i}=x_{j}$.</p>
+                <p><strong>Fórmula:</strong></p>
+                $$VR_{m,n}=m^{n}$$
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Construimos una secuencia de longitud $n$ con elementos de un conjunto de tamaño $m$, permitiendo repeticiones.</p>
+                    <ol>
+                        <li>Para la primera posición, tenemos $m$ opciones.</li>
+                        <li>Para la segunda posición, al permitirse repetición, seguimos teniendo $m$ opciones.</li>
+                        <li>...</li>
+                        <li>Para la $n$-ésima posición, tenemos $m$ opciones.</li>
+                    </ol>
+                    <p>Aplicando el Principio de la Multiplicación:</p>
+                    $$VR_{m,n}=\underbrace{m\cdot m\cdot\cdot\cdot\cdot m}_{n \text{ veces}}=m^{n}$$
+                </div>
+            </div>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo 3.4: La Quiniela</div>
+                <p>Pronosticar 14 partidos con 3 signos posibles (1, X, 2).</p>
+                $$VR_{3,14}=3^{14}=4.782.969 \text{ columnas.}$$
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: PERMUTACIONES -->
+        <section id="permutaciones">
+            <h2><span class="section-number">4</span> Permutaciones</h2>
+
+            <h3>4.1. Permutaciones Ordinarias</h3>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición 4.1: Permutaciones Ordinarias</div>
+                <p>Una permutación de un conjunto $A$ de $n$ elementos es una ordenación lineal de todos los elementos del conjunto.</p>
+                <p><strong>Fórmula:</strong></p>
+                $$P_{n}=n!$$
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Las permutaciones son un caso particular de las variaciones ordinarias donde tomamos todos los elementos disponibles, es decir, $m=n$. Sustituyendo en la fórmula de variaciones:</p>
+                    $$P_{n}=V_{n,n}=n\cdot(n-1)\cdot\cdot\cdot\cdot(n-n+1)=n\cdot(n-1)\cdot\cdot\cdot1=n!$$
+                </div>
+            </div>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo 4.2: Libros en estantería</div>
+                <p>Ordenar 5 libros distintos en una balda. $P_{5}=5!=120$ formas.</p>
+            </div>
+
+            <h3>4.2. Permutaciones Circulares</h3>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición 4.3: Permutaciones Circulares</div>
+                <p>Ordenación de $n$ elementos en un círculo, donde las rotaciones no generan una nueva permutación.</p>
+                <p><strong>Fórmula:</strong></p>
+                $$PC_{n}=(n-1)!$$
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Sea $x$ el número de permutaciones circulares. Cada permutación circular puede abrirse en una línea de $n$ formas distintas (dependiendo de qué elemento consideremos el "primero"). Esto generaría todas las permutaciones lineales posibles ($n!$).</p>
+                    $$x\cdot n=P_{n}=n!\Rightarrow x=\frac{n!}{n}=(n-1)!$$
+                    <p>Alternativamente: Fijamos un elemento para romper la simetría rotacional. Nos quedan $n-1$ elementos para permutar linealmente.</p>
+                    $$PC_{n}=(n-1)!$$
+                </div>
+            </div>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo 4.4: Collar</div>
+                <p>Ubicar 8 cuentas distintas en un collar circular. $PC_{8}=7!=5.040$ formas.</p>
+            </div>
+
+            <h3>4.3. Permutaciones con Repetición</h3>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición 4.5: Permutaciones con Repetición</div>
+                <p>Ordenaciones de $n$ elementos donde existen grupos de elementos idénticos entre sí $(n_{1},n_{2},...,n_{k})$.</p>
+                <p><strong>Fórmula:</strong></p>
+                $$PR_{n}^{n_{1},...,n_{k}}=\frac{n!}{n_{1}!\cdot n_{2}!\cdot\cdot\cdot n_{k}!}$$
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Si los $n$ elementos fueran distintos, tendríamos $n!$ permutaciones. Sin embargo, como hay elementos idénticos, muchas de estas permutaciones son visualmente iguales. Los $n_{1}$ elementos del primer tipo pueden permutarse entre sí de $n_{1}!$ formas sin cambiar la apariencia de la configuración. Del mismo modo para los $n_{2},...,n_{k}$. Para obtener las permutaciones distinguibles, debemos dividir el total teórico ($n!$) por las permutaciones redundantes de cada grupo:</p>
+                    $$PR_{n}^{n_{1},...,n_{k}}=\frac{n!}{n_{1}!\cdot n_{2}!\cdot\cdot\cdot n_{k}!}$$
+                </div>
+            </div>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo 4.6: Anagramas</div>
+                <p>¿Cuántos anagramas tiene la palabra AMARANTA? (4 A, 1 M, 1 R, 1 N, 1 T).</p>
+                $$PR_{8}^{4,1,1,1,1}=\frac{8!}{4!}=1.680 \text{ palabras.}$$
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: COMBINACIONES -->
+        <section id="combinaciones">
+            <h2><span class="section-number">5</span> Combinaciones</h2>
+            <p>Las combinaciones tratan la selección de subconjuntos, donde el orden no es relevante.</p>
+
+            <h3>5.1. Combinaciones Ordinarias</h3>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición 5.1: Combinaciones Ordinarias</div>
+                <p>Subconjuntos de $n$ elementos elegidos de un conjunto total de $m$ elementos, sin importar el orden y sin repetirlos.</p>
+                <p><strong>Fórmula:</strong></p>
+                $$C_{m,n}=\binom{m}{n}=\frac{m!}{n!(m-n)!}$$
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Podemos construir una Variación (donde importa el orden) en dos pasos:</p>
+                    <ol>
+                        <li>Elegir un subconjunto de $n$ elementos (una combinación). Sea $C_{m,n}$ su número.</li>
+                        <li>Ordenar esos $n$ elementos elegidos. Esto se puede hacer de $P_{n}=n!$ formas.</li>
+                    </ol>
+                    <p>Por tanto, $V_{m,n}=C_{m,n}\cdot P_{n}$. Despejando:</p>
+                    $$C_{m,n}=\frac{V_{m,n}}{P_{n}}=\frac{m!/(m-n)!}{n!}=\frac{m!}{n!(m-n)!}=\binom{m}{n}$$
+                </div>
+            </div>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo 5.2: Lotería Primitiva</div>
+                <p>Elegir 6 números de un bombo de 49. $C_{49,6}=13.983.816$ apuestas posibles.</p>
+            </div>
+
+            <h3>5.2. Combinaciones con Repetición</h3>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición 5.3: Combinaciones con Repetición</div>
+                <p>Selección de $n$ elementos de un conjunto de $m$, permitiendo repetición de elementos y sin importar el orden.</p>
+                <p><strong>Fórmula:</strong></p>
+                $$CR_{m,n}=\binom{m+n-1}{n}$$
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p><strong>Método de Barras y Estrellas:</strong> Queremos seleccionar $n$ elementos de $m$ tipos posibles. Podemos representar una selección mediante una secuencia de símbolos. Usamos $n$ "estrellas" (*) para representar los objetos elegidos y $m-1$ "barras" (|) para separar las $m$ categorías. Por ejemplo, si tenemos 3 tipos (A, B, C) y elegimos 4 objetos (2 de A, 1 de B, 1 de C), lo representamos como: $**|*|*$.</p>
+                    <p>Cualquier permutación de estos símbolos representa una solución única. El problema se reduce a contar las permutaciones con repetición de $n$ estrellas y $m-1$ barras. El número total de símbolos es $n+(m-1)$.</p>
+                    $$CR_{m,n}=PR_{n+m-1}^{n,m-1}=\frac{(n+m-1)!}{n!(m-1)!}=\binom{m+n-1}{n}$$
+                </div>
+            </div>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo 5.4: Pastelería</div>
+                <p>Si en una pastelería hay 4 tipos de pasteles y queremos comprar una caja de 12 pasteles:</p>
+                $$CR_{4,12}=\binom{4+12-1}{12}=\binom{15}{12}=455 \text{ cajas distintas.}$$
+            </div>
+        </section>
+
+        <!-- SECCIÓN 6: BINOMIO DE NEWTON -->
+        <section id="binomio">
+            <h2><span class="section-number">6</span> Números Combinatorios y el Binomio de Newton</h2>
+
+            <h3>6.1. Propiedades y Triángulo de Pascal</h3>
+            <div class="box property">
+                <div class="box-title"><i class="fa-solid fa-key"></i> Propiedad de Simetría</div>
+                $$\binom{m}{n}=\binom{m}{m-n}$$
+                <p><em>Justificación:</em> Elegir $n$ elementos para quedarse es exactamente lo mismo (y deja el mismo número de opciones) que elegir los $m-n$ elementos que vamos a descartar.</p>
+            </div>
+
+            <div class="box property">
+                <div class="box-title"><i class="fa-solid fa-key"></i> Identidad de Stifel (Regla de Pascal)</div>
+                $$\binom{m}{n}=\binom{m-1}{n-1}+\binom{m-1}{n}$$
+                <p><em>Justificación:</em> Consideremos un elemento fijo $z$. Todos los subconjuntos de tamaño $n$ se pueden dividir en dos grupos mutuamente excluyentes: los que <strong>contienen</strong> a $z$ (por lo que debemos elegir los $n-1$ restantes del grupo de $m-1$) y los que <strong>no contienen</strong> a $z$ (por lo que debemos elegir los $n$ directamente del grupo de $m-1$).</p>
+            </div>
+
+            <h3>6.2. Fórmula del Binomio de Newton</h3>
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-scroll"></i> Teorema 6.1: Binomio de Newton</div>
+                $$(a+b)^{n}=\sum_{k=0}^{n}\binom{n}{k}a^{n-k}b^{k}$$
+
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>El desarrollo de $(a+b)^{n}$ es el producto $(a+b)(a+b)...(a+b)$ repetido $n$ veces. Para obtener un término de la forma $a^{n-k}b^{k}$ tras multiplicar y agrupar todo, debemos elegir la letra $b$ en exactamente $k$ paréntesis y la letra $a$ en los restantes $n-k$ paréntesis. El número de formas en que podemos elegir en qué $k$ paréntesis tomamos la $b$ es un problema de combinaciones: $\binom{n}{k}$.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 7: APLICACIONES -->
+        <section id="aplicaciones">
+            <h2><span class="section-number">7</span> Aplicaciones: Teoría de Grafos</h2>
+            <p>Una de las aplicaciones más célebres del razonamiento combinatorio dio origen a la Teoría de Grafos. Aunque esta disciplina ha adquirido entidad propia, sus fundamentos combinatorios son claros: un grafo $G=(V,E)$ se define como un conjunto de vértices $V$ y un conjunto de aristas $E$, donde cada arista es un par de vértices $\{u,v\}$. Si el grafo es simple, las aristas son esencialmente <strong>combinaciones</strong> de 2 elementos tomados del conjunto $V$.</p>
+            
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo 7.1: Los Puentes de Königsberg (Euler, 1736)</div>
+                <p>En la ciudad de Königsberg, el río Pregel rodeaba la isla de Kneiphof. Siete puentes conectaban las distintas partes de la ciudad. El problema era: ¿Es posible dar un paseo pasando por todos los puentes una sola vez?</p>
+                <p>Euler modeló el problema representando las zonas de tierra como puntos (vértices) y los puentes como líneas (aristas), creando un grafo. El razonamiento de Euler es puramente combinatorio y se basa en el conteo de incidencias:</p>
+                <p>Para recorrer un grafo sin repetir aristas (camino euleriano), observó que si uno entra a un vértice por un puente, debe salir por otro diferente. Esto implica que las aristas incidentes en cualquier vértice intermedio deben agruparse en pares de entrada/salida. Por lo tanto, el <strong>grado</strong> del vértice (número de aristas que llegan a él) debe ser un número par.</p>
+                <p>Euler demostró que tal paseo es posible si y solo si el grafo tiene cero o dos vértices de grado impar (inicio y fin). Al analizar Königsberg, observó que los cuatro vértices tenían grado impar (3, 3, 3 y 5 aristas), demostrando así, mediante un argumento de paridad y conteo, la imposibilidad del paseo.</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 8: CONCLUSIÓN -->
+        <section id="conclusion">
+            <h2><span class="section-number">8</span> Conclusión</h2>
+            <p>En este tema hemos construido una estructura lógica para el conteo: partiendo de principios axiomáticos (adición, producto), hemos derivado fórmulas para variaciones, permutaciones y combinaciones, justificando cada una mediante argumentos conjuntistas y biyectivos. Estas herramientas son la base para el cálculo de probabilidades y el análisis de algoritmos.</p>
+        </section>
+    </main>
+
+    <!-- JS PARA INTERACTIVIDAD -->
+    <script>
+        // Función para mostrar/ocultar el contenido de la demostración
+        function toggleProof(btn) {
+            const proofContent = btn.nextElementSibling;
+            if (proofContent.style.display === "none" || proofContent.style.display === "") {
+                proofContent.style.display = "block";
+                btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Ocultar Demostración';
+            } else {
+                proofContent.style.display = "none";
+                btn.innerHTML = '<i class="fa-solid fa-eye"></i> Ver Demostración';
+            }
+        }
+
+        // Configuración del Intersection Observer para la barra lateral
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-50% 0px -50% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        const activeId = entry.target.getAttribute('id');
+                        const activeLink = document.querySelector(`.nav-link[href="#${activeId}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Comportamiento de anclaje suave
+            document.documentElement.style.scrollBehavior = "smooth";
+        });
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+
+</html>

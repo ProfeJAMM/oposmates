@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 1: Los números naturales. Sistemas de numeración</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+
+    <!-- MathJax for rendering LaTeX -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)'], ['$', '$']],
+                displayMath: [['\\[', '\\]'], ['$$', '$$']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --surface: #ffffff;
+            --text-main: #2d3748;
+            --text-light: #718096;
+            --primary: #4338ca;
+            --primary-light: #e0e7ff;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Variables del Logo JPi */
+            --logo-primary-light: #6366f1;
+            --logo-primary-dark: #312e81;
+            --logo-accent: #facc15;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- CLASES CSS DEL LOGO JPi --- */
+        .css-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--logo-primary-dark), var(--logo-primary-light));
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+            user-select: none;
+        }
+
+        .css-logo span {
+            color: var(--logo-accent);
+            margin-left: 2px;
+        }
+
+        .css-logo-small {
+            width: 45px;
+            height: 45px;
+            font-size: 1.4rem;
+        }
+
+        .css-logo-large {
+            width: 80px;
+            height: 80px;
+            font-size: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* --- Sidebar Navigation --- */
+        .sidebar {
+            width: 320px;
+            background-color: var(--surface);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2.5rem 2rem;
+            z-index: 50;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .brand {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.875rem 1rem;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(67, 56, 202, 0.3);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex: 1;
+            margin-left: 320px;
+            padding: 4rem 10%;
+            max-width: 1200px;
+            background-color: var(--bg-color);
+        }
+
+        /* Top Header */
+        .page-header {
+            margin-bottom: 4rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-header p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+        }
+
+        /* Sections and Typography */
+        section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.25rem;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        h2 span.section-number {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+        }
+
+        .important-text {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Feature Boxes (Definitions, Theorems, Examples) */
+        .box {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .box:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .box::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+        }
+
+        .box-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Box Variants */
+        .box.definition {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+        }
+
+        .box.definition::before {
+            background-color: var(--primary);
+        }
+
+        .box.definition .box-title {
+            color: var(--primary);
+        }
+
+        .box.theorem {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .box.theorem::before {
+            background-color: #ef4444;
+        }
+
+        .box.theorem .box-title {
+            color: #b91c1c;
+        }
+
+        .box.property {
+            background-color: #fffbeb;
+            border: 1px solid #fde68a;
+        }
+
+        .box.property::before {
+            background-color: #f59e0b;
+        }
+
+        .box.property .box-title {
+            color: #d97706;
+        }
+
+        .box.example {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            overflow-x: auto;
+        }
+
+        .box.example::before {
+            background-color: #10b981;
+        }
+
+        .box.example .box-title {
+            color: #047857;
+        }
+
+
+
+        /* Proof Button & Content */
+        .proof-btn {
+            background-color: transparent;
+            color: var(--text-light);
+            border: 2px solid var(--border);
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .proof-btn:hover,
+        .proof-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .proof-btn.active {
+            background-color: #fffbeb;
+        }
+
+        .proof-btn i {
+            transition: transform 0.3s;
+        }
+
+        .proof-btn.active i {
+            transform: rotate(180deg);
+        }
+
+        .proof-content {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px dashed var(--border);
+        }
+
+        .proof-content.open {
+            display: block;
+        }
+
+        ul {
+            list-style-position: inside;
+            margin-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        ul.custom-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        ul.custom-list li {
+            position: relative;
+            padding-left: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        ul.custom-list li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+        }
+
+        /* --- Reproductor de Video Flotante --- */
+        .video-link {
+            color: var(--accent);
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .video-link:hover {
+            color: var(--primary);
+        }
+
+        .video-modal {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40vw;
+            /* 40% del ancho de la página */
+            height: calc(40vw * 9 / 16 + 40px);
+            /* Proporción 16:9 para el video + espacio para el botón */
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity 0.3s, transform 0.3s;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-20px);
+        }
+
+        .video-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .video-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .video-modal-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .video-modal-header button:hover {
+            transform: scale(1.1);
+        }
+
+        .video-modal iframe {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Ajuste para móviles: si la pantalla es muy pequeña, que ocupe más para poder verse bien */
+        @media (max-width: 768px) {
+            .video-modal {
+                width: 90vw;
+                height: calc(90vw * 9 / 16 + 40px);
+                right: 5vw;
+                top: 10px;
+            }
+        }
+
+        /* Math Styling Specific */
+        .math-container {
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+
+        /* Utility classes */
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .rounded {
+            border-radius: var(--radius-md);
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 260px;
+            }
+
+            .main-content {
+                margin-left: 260px;
+                padding: 3rem 5%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 2rem 5%;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="sidebar">
+        <div class="brand">
+            <div class="css-logo css-logo-small">J<span>&pi;</span></div>
+            Tema 1
+        </div>
+        <ul>
+            <li><a href="#intro" class="nav-link">1. Introducción</a></li>
+            <li><a href="#peano" class="nav-link">2. El conjunto de los números naturales: construcción axiomática de
+                    Peano</a></li>
+            <li><a href="#peano-def" class="nav-link">2.1. Definición y axiomas</a></li>
+            <li><a href="#peano-teoremas" class="nav-link">2.2. Teoremas básicos derivados</a></li>
+            <li><a href="#peano-induccion" class="nav-link">2.3. Equivalencias del principio de inducción</a></li>
+            <li><a href="#operaciones" class="nav-link">3. Operaciones en \(\mathbb{N}\)</a></li>
+            <li><a href="#suma" class="nav-link">3.1. Suma o adición</a></li>
+            <li><a href="#producto" class="nav-link">3.2. Producto</a></li>
+            <li><a href="#orden" class="nav-link">4. Orden en \(\mathbb{N}\)</a></li>
+            <li><a href="#tricotomia" class="nav-link">4.1. Orden estricto y ley de tricotomía</a></li>
+            <li><a href="#conjuntos" class="nav-link">5. Construcción de \(\mathbb{N}\) basada en la teoría de
+                    conjuntos</a></li>
+            <li><a href="#cardinalidad" class="nav-link">5.1. Cardinalidad y teorema de Cantor-Bernstein</a></li>
+            <li><a href="#finitos" class="nav-link">5.2. Conjuntos finitos e infinitos</a></li>
+            <li><a href="#sistemas" class="nav-link">6. Sistemas de numeración y divisibilidad</a></li>
+            <li><a href="#division" class="nav-link">6.1. División de números naturales</a></li>
+            <li><a href="#teorema-fundamental" class="nav-link">6.2. Teorema fundamental de la numeración</a></li>
+            <li><a href="#propiedades-num" class="nav-link">6.3. Propiedades aritméticas de la numeración</a></li>
+            <li><a href="#conclusion" class="nav-link">7. Conclusión</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div class="css-logo css-logo-large" style="margin-bottom: 1.5rem;">J<span>&pi;</span></div>
+            <h1>Tema 1: Los números naturales. Sistemas de numeración</h1>
+            <p>Construcción axiomática de Peano, operaciones básicas y sistemas de numeración y divisibilidad.</p>
+        </header>
+
+        <section id="intro">
+
+            <h2><span class="section-number">1</span> Introducción</h2>
+            <p>El concepto de número natural constituye la base sobre la que se edifica la aritmética y, por extensión,
+                gran parte de la estructura matemática. Su desarrollo no fue inmediato, sino el fruto de un lento
+                proceso de abstracción que se estima abarcó desde el 25.000 hasta el 6.000 a.C. Antropológicamente, la
+                noción de número surge de la necesidad de contar y ordenar, presentando una doble vertiente que es
+                crucial para su comprensión: el aspecto cardinal, basado en el principio de correspondencia biunívoca
+                para distinguir cantidades (uno, dos, muchos), y el aspecto ordinal, que introduce la noción de sucesión
+                y orden, esencial para el desarrollo del cálculo.</p>
+
+            <p>Históricamente, la representación de estas cantidades evolucionó desde el uso de partes del cuerpo
+                (origen de los sistemas quinarios y decimales) y muescas en huesos, hasta la creación de sistemas de
+                numeración complejos. Sin embargo, la formalización rigurosa de \(\mathbb{N}\) no llegaría hasta finales
+                del siglo XIX, motivada por la crisis de los fundamentos de la matemática. En este contexto, matemáticos
+                como Cantor, Frege y Dedekind intentaron fundamentar la aritmética en la teoría de conjuntos (vía
+                cardinal), mientras que Giuseppe Peano optó por una vía axiomática, definiendo los naturales mediante
+                reglas precisas que evitaban las ambigüedades y paradojas lógicas de la época.</p>
+
+            <p>En el presente tema abordaremos la construcción formal del conjunto \(\mathbb{N}\) siguiendo la
+                axiomática de Peano, dotándolo de estructura de semianillo totalmente ordenado mediante la definición
+                recurrente de sus operaciones. Posteriormente, analizaremos la evolución de los sistemas de numeración,
+                culminando con la demostración del Teorema Fundamental de la Numeración, pilar del sistema posicional
+                decimal que utilizamos actualmente.</p>
+
+        </section>
+        <section id="peano">
+
+            <h2><span class="section-number">2</span> El conjunto de los números naturales: construcción axiomática de
+                Peano</h2>
+            <p>Giuseppe Peano (1858-1932) estableció un sistema axiomático para definir \(\mathbb{N}\) evitando las
+                dificultades de la teoría de conjuntos.</p>
+
+            <h3 id="peano-def">2.1. Definición y axiomas</h3>
+            <div class="box definition">
+                <div class="box-title">
+                    <span><i class="fa-solid fa-book"></i> Definición.</span>
+                    <a href="#" class="video-link"
+                        style="margin-left: auto; text-transform: none; font-size: 0.9em; font-weight: normal;"
+                        onclick="openVideo(event, 'https://www.youtube.com/embed/A0UTqKrIbaI')">
+                        <i class="fa-brands fa-youtube"
+                            style="color: #ef4444; margin-right: 5px; font-size: 1.2em;"></i>Ver Vídeo
+                    </a>
+                </div>
+                <p> Se define el conjunto de los números naturales \(\mathbb{N}\) como un conjunto no vacío que cumple
+                    los siguientes axiomas fundamentales:</p>
+                <ul class="text-list">
+                    <li><strong>Axioma I.</strong> Existe un elemento distinguido perteneciente a \(\mathbb{N}\).
+                        Dependiendo de la fuente, este elemento se denota como 1 o 0. Asumiremos el 0 como primer
+                        elemento para la construcción general.</li>
+                    <li><strong>Axioma II (Del siguiente).</strong> A cada número natural \(n\in\mathbb{N}\) le
+                        corresponde un único número natural siguiente, denotado como \(sg(n)\), \(n^{+}\) o
+                        \(n^{\prime}\). La aplicación \(s:\mathbb{N}\rightarrow\mathbb{N}\) es una aplicación inyectiva.
+                    </li>
+                    <li><strong>Axioma III.</strong> El elemento inicial (0) no es el siguiente de ningún número
+                        natural. \((\forall n\in\mathbb{N}, n^{+}\ne0)\).</li>
+                    <li><strong>Axioma IV (Inyectividad).</strong> Si dos números tienen el mismo siguiente, entonces
+                        son el mismo número. \((n^{+}=m^{+}\Rightarrow n=m)\).</li>
+                    <li><strong>Axioma V (Inducción completa).</strong> Si un subconjunto \(K\subseteq\mathbb{N}\)
+                        contiene al elemento inicial (0) y cumple que si \(n\in K\Rightarrow n^{+}\in K\) entonces
+                        \(K=\mathbb{N}\).</li>
+                </ul>
+            </div>
+
+            <h3 id="peano-teoremas">2.2. Teoremas básicos derivados</h3>
+            <p>Del sistema de Peano se deducen propiedades fundamentales sobre la naturaleza de los elementos de
+                \(\mathbb{N}\).</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-gavel"></i> Teorema 2.1 (No existencia de puntos fijos).
+                </div>
+                <p> Todo elemento de \(\mathbb{N}\) es distinto de su siguiente, es decir, \(\forall n\in\mathbb{N}\),
+                    \(n\ne n^{+}\).</p>
+            </div>
+
+            <button class="proof-btn" onclick="toggleProof(this)">
+                <i class="fa-solid fa-eye"></i> Demostración
+            </button>
+            <div class="proof-content">
+                <p><strong>Demostración del teorema 2.1 (No existencia de puntos fijos)</strong></p>
+
+                <p>Consideremos el conjunto \(U=\{x\in\mathbb{N} \mid x\ne x^{+}\}\).</p>
+                <ul>
+                    <li>Para el elemento inicial 0: Por el Axioma III, 0 no es siguiente de nadie, luego \(0\ne0^{+}\)
+                        (pues si \(0=0^{+}\), 0 sería siguiente de 0). Por tanto, \(0\in U\).</li>
+                    <li>Supongamos que \(h\in U\), es decir, \(h\ne h^{+}\). Por el Axioma IV (inyectividad de la
+                        aplicación siguiente), si los antecedentes son distintos, las imágenes también lo son. Por
+                        tanto, \(h\ne h^{+}\Rightarrow h^{+}\ne(h^{+})^{+}\). Esto implica que \(h^{+}\in U\).</li>
+                </ul>
+                <p>Aplicando el Axioma V (Inducción), concluimos que \(U=\mathbb{N}\).</p>
+            </div>
+
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-gavel"></i> Teorema 2.2 (Existencia del predecesor).</div>
+                <p> Todo elemento de \(\mathbb{N}\), salvo el 0, es el siguiente de algún número natural. Es decir,
+                    \(\forall n\in\mathbb{N}\setminus\{0\}\) existe \(m \in \mathbb{N}\) tal que \(m^{+}=n\).</p>
+            </div>
+
+            <button class="proof-btn" onclick="toggleProof(this)">
+                <i class="fa-solid fa-eye"></i> Demostración
+            </button>
+            <div class="proof-content">
+                <p><strong>Demostración del teorema 2.2 (Existencia del predecesor)</strong></p>
+
+                <p>Construimos el conjunto \(K=\{0\}\cup\{x\in\mathbb{N} \mid \exists y\in\mathbb{N}, y^{+}=x\}.\)</p>
+                <ul>
+                    <li>Evidentemente \(0\in K\) por definición.</li>
+                    <li>Sea \(h\in K\). Queremos ver si \(h^{+}\in K\). El elemento \(h^{+}\) es, por definición, el
+                        siguiente de \(h\), luego existe un número (el propio \(h\)) tal que su siguiente es \(h^{+}\).
+                        Por tanto, \(h^{+}\in K\).</li>
+                </ul>
+                <p>Por el Axioma de Inducción, \(K=\mathbb{N}.\)</p>
+            </div>
+
+
+            <h3 id="peano-induccion">2.3. Equivalencias del principio de inducción</h3>
+            <p>El Axioma V admite formulaciones equivalentes fundamentales para la aritmética:</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-gavel"></i> Teorema 2.3 (Equivalencia lógica).</div>
+                <p> Las siguientes proposiciones son equivalentes:</p>
+                <ol>
+                    <li><strong>Principio de inducción matemática (PIM):</strong> Si \(S\subseteq\mathbb{N}\), \(0\in
+                        S\) y \((n\in S\Rightarrow n^{+}\in S)\), entonces \(S=\mathbb{N}\).</li>
+                    <li><strong>Principio de inducción fuerte:</strong> El conjunto \(S=\mathbb{N}\) es el único
+                        subconjunto de \(\mathbb{N}\) con la propiedad: Para cada \(n\in\mathbb{N}\), si todo número
+                        natural menor que \(n\) está en \(S\), entonces \(n\in S\).</li>
+                    <li><strong>Principio del buen orden:</strong> Todo subconjunto no vacío de \(\mathbb{N}\) tiene un
+                        elemento mínimo (primer elemento).</li>
+                </ol>
+            </div>
+
+            <button class="proof-btn" onclick="toggleProof(this)">
+                <i class="fa-solid fa-eye"></i> Demostración
+            </button>
+            <div class="proof-content">
+                <p><strong>Demostración del teorema 2.3 (Equivalencia PIM - Buen Orden)</strong></p>
+
+                <p>(Esquema PIM \(\to\) BuenOrden): Sea \(S\subseteq\mathbb{N}\) no vacío. Supongamos que \(S\) no tiene
+                    mínimo. Consideremos el conjunto \(T=\{n\in\mathbb{N} \mid \forall m\le n, m\notin S\}\) (el
+                    conjunto de los números menores estrictos que cualquier elemento de \(S\)).</p>
+                <ul>
+                    <li>\(0\in T\) pues si \(0\in S\), al ser el menor natural, sería el mínimo de \(S\), contradiciendo
+                        la hipótesis.</li>
+                    <li>Si \(n\in T\), entonces \(0,...,n\notin S\). Si \(n^{+}\in S\), como no hay elementos en \(S\)
+                        menores que \(n^{+}\), \(n^{+}\) sería el mínimo. Como \(S\) no tiene mínimo, \(n^{+}\notin S\).
+                        Así, todos los naturales hasta \(n^{+}\) están fuera de \(S\), luego \(n^{+}\in T\).</li>
+                </ul>
+                <p>Por inducción, \(T=\mathbb{N}\). Esto implica que \(S\) no tiene elementos \((S=\emptyset)\), lo que
+                    contradice la hipótesis de que \(S\) es no vacío.</p>
+            </div>
+
+
+        </section>
+        <section id="operaciones">
+
+            <h2><span class="section-number">3</span> Operaciones en \(\mathbb{N}\)</h2>
+
+            <h3 id="suma">3.1. Suma o adición</h3>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book"></i> Definición.</div>
+                <p> Se define la aplicación \(+:\mathbb{N}\times\mathbb{N}\rightarrow\mathbb{N}\) tal que:</p>
+                <ol>
+                    <li>\(x+0=x\)</li>
+                    <li>\(x+sg(y)=sg(x+y)\)</li>
+                </ol>
+            </div>
+
+            <div class="box property">
+                <div class="box-title"><i class="fa-solid fa-list-check"></i> Propiedades:</div>
+
+                <ul class="text-list">
+                    <li><strong>Asociativa:</strong> \((m+n)+p=m+(n+p)\).</li>
+                    <li><strong>Conmutativa:</strong> \(m+n=n+m\).</li>
+                    <li><strong>Elemento neutro:</strong> El 0 es neutro para la suma.</li>
+                    <li><strong>Ley cancelativa:</strong> Si \(m+p=n+p\Rightarrow m=n\).</li>
+                </ul>
+            </div>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-gavel"></i> Teorema 3.1 (Ley cancelativa de la suma).</div>
+                <p> Para cualesquiera \(m, n, p\in\mathbb{N},\) si \(m+p=n+p\) entonces \(m=n\).</p>
+            </div>
+
+            <button class="proof-btn" onclick="toggleProof(this)">
+                <i class="fa-solid fa-eye"></i> Demostración
+            </button>
+            <div class="proof-content">
+                <p><strong>Demostración del teorema 3.1 (Ley cancelativa de la suma)</strong></p>
+
+                <p>Razonamos por inducción sobre \(p\).</p>
+                <ul>
+                    <li><strong>Base:</strong> Si \(p=0\), \(m+0=n+0\Rightarrow m=n\) (por ser 0 elemento neutro).</li>
+                    <li><strong>Paso inductivo:</strong> Supongamos cierto para \(p\) (Hipótesis: \(m+p=n+p\Rightarrow
+                        m=n\)). Veamos para \(p^{+}\): Si \(m+p^{+}=n+p^{+}\), por definición de suma,
+                        \((m+p)^{+}=(n+p)^{+}.\) Aplicando el Axioma IV (inyectividad del siguiente), deducimos que
+                        \(m+p=n+p.\) Aplicando la hipótesis de inducción, concluimos \(m=n\).</li>
+                </ul>
+                <p>Luego la propiedad es cierta para todo \(p\in\mathbb{N}\).</p>
+            </div>
+
+
+            <h3 id="producto">3.2. Producto</h3>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book"></i> Definición.</div>
+                <p> Se define \(\cdot:\mathbb{N}\times\mathbb{N}\rightarrow\mathbb{N}\) tal que:</p>
+                <ol>
+                    <li>\(x\cdot0=0\)</li>
+                    <li>\(x\cdot y^{+}=x\cdot y+x\)</li>
+                </ol>
+            </div>
+            <p>Estructura: \((\mathbb{N},+,\cdot)\) es un semianillo conmutativo unitario.</p>
+
+        </section>
+        <section id="orden">
+
+            <h2><span class="section-number">4</span> Orden en \(\mathbb{N}\)</h2>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book"></i> Definición.</div>
+                <p> Se define la relación binaria \(\le\) en \(\mathbb{N}\) de la siguiente manera:</p>
+                \[a\le b\iff\exists c\in\mathbb{N} \text{ tal que } a+c=b\]
+            </div>
+            <p>Propiedades de la relación de orden: reflexiva, antisimétrica, transitiva y total.</p>
+
+            <h3 id="tricotomia">4.1. Orden estricto y ley de tricotomía</h3>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book"></i> Definición.</div>
+                <p> Se define el orden estricto \(a \lt b\) si existe \(x\in\mathbb{N}\), \(x\ne0\) tal que \(a+x=b\).
+                </p>
+            </div>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-gavel"></i> Teorema 4.1 (Ley de tricotomía).</div>
+                <p> Para cualesquiera \(a, b\in\mathbb{N}\), se verifica una y solo una de las siguientes relaciones:
+                </p>
+                \[a \lt b, \quad a=b, \quad b \lt a\]
+            </div>
+
+            <button class="proof-btn" onclick="toggleProof(this)">
+                <i class="fa-solid fa-eye"></i> Demostración
+            </button>
+            <div class="proof-content">
+                <p><strong>Demostración del teorema 4.1 (Ley de tricotomía)</strong></p>
+
+                <p>Fijamos \(a\) y probamos por inducción sobre \(b\):</p>
+                <p><strong>1. Para \(b=0\):</strong></p>
+                <ul>
+                    <li>Si \(a=0\), se cumple \(a=b.\)</li>
+                    <li>Si \(a\ne0\), por el Teorema 6 (referencia interna implícita), \(0 \lt a\), es decir, \(b \lt
+                        a\).</li>
+                    <li>No puede ser \(a \lt 0\) porque no existe \(x\ne0\) tal que \(a+x=0\) (en \(\mathbb{N}\) no hay
+                        opuestos salvo el trivial).</li>
+                </ul>
+                <p><strong>2. Supongamos que la tricotomía es cierta para \(b\). Analicemos para \(b^{+}\):</strong></p>
+                <ul>
+                    <li>Si \(a=b\), entonces \(a \lt b^{+}\) (pues \(a+1=b^{+}\)).</li>
+                    <li>Si \(a \lt b\) existe \(x\ne0\) tal que \(a+x=b\). Entonces \(a+x+1=b+1 \Rightarrow
+                        a+(x+1)=b^{+}\) luego \(a \lt b^{+}\).</li>
+                    <li>Si \(b \lt a\) existe \(y\ne0\) tal que \(b+y=a\).
+                        <ul>
+                            <li>Si \(y=1\), entonces \(b+1=a\Rightarrow b^{+}=a\).</li>
+                            <li>Si \(y\ne1\), entonces \(y\) tiene un predecesor \(y^{\prime}\ne0\) tal que
+                                \(y=y^{\prime}+1\). Así, \(b+y^{\prime}+1=a\Rightarrow b^{+}+y^{\prime}=a\) con
+                                \(y^{\prime}\ne0\), luego \(b^{+} \lt a\).</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>En todos los casos se cumple una de las opciones.</p>
+            </div>
+
+
+        </section>
+        <section id="conjuntos">
+
+            <h2><span class="section-number">5</span> Construcción de \(\mathbb{N}\) basada en la teoría de conjuntos
+            </h2>
+
+            <h3 id="cardinalidad">5.1. Cardinalidad y teorema de Cantor-Bernstein</h3>
+            <p>Dos conjuntos \(A\) y \(B\) son equipotentes \((A\sim B)\) si existe una biyección entre ellos. El
+                cardinal de un conjunto finito se identifica con un número natural.</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-gavel"></i> Teorema 5.1 (Cantor-Bernstein para cardinales).
+                </div>
+                <p> Dados dos cardinales \(x=Card(X)\) e \(y=Card(Y)\):</p>
+                \[Si \ x\le y \ e \ y\le x\Rightarrow x=y\]
+            </div>
+
+            <button class="proof-btn" onclick="toggleProof(this)">
+                <i class="fa-solid fa-eye"></i> Demostración
+            </button>
+            <div class="proof-content">
+                <p><strong>Demostración del teorema 5.1 (Cantor-Bernstein)</strong></p>
+
+                <p>Si \(x\le y\), existe una inyección \(f:X\rightarrow Y\). Si \(y\le x\), existe una inyección
+                    \(g:Y\rightarrow X\). Entonces \(Card(Y)=Card(g(Y))\) y \(g(Y)\subseteq X\). Consideramos
+                    \(Z=g(Y)\). Como \(f\) es inyectiva, \(Card(X)=Card(f(X))\). Se construye una biyección \(h\) entre
+                    \(X\) e \(Y\) mediante particiones iterativas de los conjuntos formados por las imágenes sucesivas
+                    de las inyecciones, demostrando que ambos conjuntos tienen la misma potencia.</p>
+            </div>
+
+
+            <h3 id="finitos">5.2. Conjuntos finitos e infinitos</h3>
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book"></i> Definición.</div>
+                <p> Un conjunto \(A\) es finito si no es equipotente a ninguna de sus partes propias.</p>
+            </div>
+
+            <div class="box property">
+                <div class="box-title"><i class="fa-solid fa-list-check"></i> Proposición 5.1.</div>
+                <p> Un conjunto \(A\) es infinito si y solo si \(Card(A)=Card(A)+1.\)</p>
+            </div>
+
+            <button class="proof-btn" onclick="toggleProof(this)">
+                <i class="fa-solid fa-eye"></i> Demostración
+            </button>
+            <div class="proof-content">
+                <p><strong>Demostración de la proposición 5.1</strong></p>
+
+                <ul>
+                    <li>\((\Rightarrow)\) Si \(A\) es infinito, existe \(B\subset A, B\ne A\) tal que \(A\sim B\). Sea
+                        \(a\in A\setminus B\). Entonces \(Card(B\cup\{a\})=Card(B)+1=Card(A)+1.\) Como
+                        \(B\cup\{a\}\subseteq A\) tenemos \(Card(A)+1\le Card(A)\). Como obviamente \(Card(A)\le
+                        Card(A)+1\), se da la igualdad.</li>
+                    <li>\((\Leftarrow)\) Si \(n=n+1\), tomando un elemento \(t\notin A\), existe biyección entre
+                        \(A\cup\{t\}\) y \(A.\) Restringiendo la biyección, \(A\) es equipotente a una parte propia.
+                    </li>
+                </ul>
+            </div>
+
+
+        </section>
+        <section id="sistemas">
+
+            <h2><span class="section-number">6</span> Sistemas de numeración y divisibilidad</h2>
+
+            <h3 id="division">6.1. División de números naturales</h3>
+            <p>Para justificar la representación de números en una base, primero necesitamos el algoritmo de la
+                división.</p>
+
+            <div class="box theorem">
+                <div class="box-title">
+                    <span><i class="fa-solid fa-gavel"></i> Teorema 6.1 (Teorema de la división euclídea).</span>
+                    <a href="#" class="video-link"
+                        style="margin-left: auto; text-transform: none; font-size: 0.9em; font-weight: normal;"
+                        onclick="openVideo(event, 'https://www.youtube.com/embed/ch0Z2Nt4y1I')">
+                        <i class="fa-brands fa-youtube"
+                            style="color: #ef4444; margin-right: 5px; font-size: 1.2em;"></i>Ver Vídeo
+                    </a>
+                </div>
+                <p> Dados dos números naturales \(m\) y \(n\) con \(n\ge1\) (si consideramos \(0\in\mathbb{N}, n\ne0)\),
+                    existen unos únicos números naturales \(q\) (cociente) y \(r\) (resto) tales que:</p>
+                \[m=n\cdot q+r \quad \text{con} \quad 0\le r \lt n\]
+            </div>
+
+            <button class="proof-btn" onclick="toggleProof(this)">
+                <i class="fa-solid fa-eye"></i> Demostración
+            </button>
+            <div class="proof-content">
+                <p><strong>Demostración del teorema 6.1 (División euclídea)</strong></p>
+
+                <p><strong>Existencia:</strong> Consideremos el conjunto \(M_{n}=\{m\in\mathbb{N} \mid \exists
+                    q,r\in\mathbb{N}, r \lt n, m=nq+r\}\). Probaremos que \(M_{n}=\mathbb{N}\) por inducción.</p>
+                <ul>
+                    <li>Para \(m=0\): \(0=n\cdot0+0\). Como \(0 \lt n\) (pues \(n\ge1\)), se cumple tomando \(q=0\),
+                        \(r=0.\)</li>
+                    <li>Supongamos \(m\in M_{n}\) es decir, \(m=nq+r\) con \(r \lt n\). Analicemos \(m+1\):
+                        \[m+1=nq+r+1=nq+(r+1)\]
+                        <ul>
+                            <li>Caso 1: Si \(r+1 \lt n\), tomamos \(q^{\prime}=q\) y \(r^{\prime}=r+1\). Entonces
+                                \(m+1=nq^{\prime}+r^{\prime}\) con \(r^{\prime} \lt n\).</li>
+                            <li>Caso 2: Si \(r+1=n\), entonces \(m+1=nq+n=n(q+1)+0.\) Tomamos \(q^{\prime}=q+1\) y
+                                \(r^{\prime}=0\). Como \(0 \lt n\), se cumple.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>En ambos casos \(m+1\in M_{n}\). Por inducción, todo número admite esta descomposición.</p>
+                <p><strong>Unicidad:</strong> Supongamos dos representaciones: \(m=nq_{1}+r_{1}=nq_{2}+r_{2}\) con
+                    \(r_{1}, r_{2} \lt n.\) Supongamos, sin pérdida de generalidad, que \(r_{1} \lt r_{2}\). Esto
+                    implica que \(q_{2} \lt q_{1}\). Entonces \(q_{2}+1\le q_{1}\) luego \(n(q_{2}+1)\le nq_{1}\).
+                    Operando: \(nq_{2}+n\le nq_{1}\). Sumamos \(r_{1}\) a la derecha (que mantiene la desigualdad pues
+                    \(r_{1}\ge0)\): \(nq_{2}+n+r_{1}\le nq_{1}+r_{1}\). Como \(nq_{1}+r_{1}=nq_{2}+r_{2},\) tenemos:
+                    \(nq_{2}+n\le nq_{2}+r_{2}\Rightarrow n\le r_{2}\). Esto contradice la hipótesis de que el resto
+                    \(r_{2}\) debe ser menor que el divisor \(n\). Por tanto, debe ser \(r_{1}=r_{2}\), lo que implica
+                    \(nq_{1}=nq_{2},\) y por la ley cancelativa del producto \((n\ne0)\), \(q_{1}=q_{2}\).</p>
+            </div>
+
+
+            <h3 id="teorema-fundamental">6.2. Teorema fundamental de la numeración</h3>
+            <p>Los sistemas de numeración posicionales se basan en este teorema, que permite representar cualquier
+                número en una base \(b>1\).</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-gavel"></i> Teorema 6.2.</div>
+                <p> Sea \(n\in\mathbb{N}\), \(n>1\) (la base). Todo número natural \(m\) se puede expresar de forma
+                    única como:</p>
+                \[m=a_{k}n^{k}+a_{k-1}n^{k-1}+\cdot\cdot\cdot+a_{1}n^{1}+a_{0}\]
+                <p>Donde los coeficientes \(a_{i}\in\mathbb{N}\) son tales que \(0\le a_{i} \lt n\) para todo \(i\), y
+                    \(a_{k}\ne0\) (salvo si \(m=0\)).</p>
+            </div>
+
+            <button class="proof-btn" onclick="toggleProof(this)">
+                <i class="fa-solid fa-eye"></i> Demostración
+            </button>
+            <div class="proof-content">
+                <p><strong>Demostración del teorema 6.2 (Fundamental de la numeración)</strong></p>
+
+                <p><strong>Existencia (Método de divisiones sucesivas):</strong> Si \(m \lt n\), tomamos \(a_{0}=m\) y
+                    ya está. Si \(m\ge n\), aplicamos el algoritmo de la división reiteradamente:</p>
+                <ol>
+                    <li>\(m=n\cdot q_{1}+a_{0}\), con \(0\le a_{0} \lt n\).</li>
+                    <li>Si \(q_{1}\ge n\), dividimos \(q_{1}: q_{1}=n\cdot q_{2}+a_{1}\), con \(0\le a_{1} \lt n\).</li>
+                    <li>Sustituyendo: \(m=n(nq_{2}+a_{1})+a_{0}=n^{2}q_{2}+na_{1}+a_{0}\).</li>
+                </ol>
+                <p>Como la sucesión de cocientes es estrictamente decreciente \((m>q_{1}>q_{2}>...)\), el proceso es
+                    finito (pues no puede haber una sucesión infinita decreciente de naturales). Llegaremos a un paso
+                    \(k\) donde \(q_{k} \lt n\). Definimos \(a_{k}=q_{k}\). La expresión final es
+                    \(m=a_{k}n^{k}+\cdot\cdot\cdot+a_{1}n+a_{0}.\)</p>
+                <p><strong>Unicidad:</strong> Supongamos dos expresiones distintas para \(m\):</p>
+                \[a_{k}n^{k}+\cdot\cdot\cdot+a_{0}=b_{s}n^{s}+\cdot\cdot\cdot+b_{0}\]
+                <p>Podemos completar con coeficientes cero para igualar las potencias más altas, asumiendo \(k=s\).
+                    Supongamos que son distintas. Entonces existe algún índice donde los coeficientes difieren.
+                    Escribimos la igualdad:</p>
+                \[m=a_{k}n^{k}+(a_{0}+\cdot\cdot\cdot+a_{k-1}n^{k-1})=b_{k}n^{k}+(b_{0}+\cdot\cdot\cdot+b_{k-1}n^{k-1})\]
+                <p>Ambos miembros pueden interpretarse como divisiones de \(m\) por \(n^{k}\). Por la unicidad del
+                    cociente y el resto en la división euclídea, debe ser \(a_{k}=b_{k}\) y los restos deben ser
+                    iguales. Reiterando el proceso para los términos de menor grado, se concluye que \(a_{i}=b_{i}\)
+                    para todo \(i\).</p>
+            </div>
+
+
+            <h3 id="propiedades-num">6.3. Propiedades aritméticas de la numeración</h3>
+            <p>A partir de la representación polinómica, se deducen propiedades útiles para el cálculo:</p>
+
+            <div class="box property">
+                <div class="box-title"><i class="fa-solid fa-list-check"></i> Proposición 6.1 (Número de cifras).</div>
+                <p> Un número \(m\) escrito en base \(n\) tiene \(k+1\) cifras si y solo si:</p>
+                \[n^{k}\le m \lt n^{k+1}\]
+            </div>
+
+            <button class="proof-btn" onclick="toggleProof(this)">
+                <i class="fa-solid fa-eye"></i> Demostración
+            </button>
+            <div class="proof-content">
+                <p><strong>Demostración de la proposición 6.1</strong></p>
+
+                <ul>
+                    <li>\((\Rightarrow)\) Si tiene \(k+1\) cifras, \(m=a_{k}n^{k}+\cdot\cdot\cdot+a_{0}\) con
+                        \(a_{k}\ge1\). Por un lado: \(m\ge1\cdot n^{k}+0=n^{k}.\) Por otro lado, como \(a_{i}\le n-1\):
+                        \[m\le(n-1)n^{k}+\cdot\cdot\cdot+(n-1)=(n-1)(n^{k}+\cdot\cdot\cdot+1)=(n-1)\frac{n^{k+1}-1}{n-1}=n^{k+1}-1
+                        \lt n^{k+1}\]
+                    </li>
+                    <li>\((\Leftarrow)\) Si \(n^{k}\le m \lt n^{k+1}\), supongamos que tiene \(j+1\) cifras. Por lo
+                        anterior, \(n^{j}\le m \lt n^{j+1}\).
+                        <ul>
+                            <li>Si \(j>k\Rightarrow m\ge n^{j}\ge n^{k+1}\) (contradicción).</li>
+                            <li>Si \(j \lt k\Rightarrow m \lt n^{j+1}\le n^{k}\) (contradicción).</li>
+                        </ul>
+                        Luego \(j=k\), tiene \(k+1\) cifras.
+                    </li>
+                </ul>
+            </div>
+
+
+        </section>
+        <section id="conclusion">
+
+            <h2><span class="section-number">7</span> Conclusión</h2>
+            <p>Hemos recorrido el camino que lleva desde la intuición primitiva de la cantidad hasta la construcción
+                formal del conjunto \(\mathbb{N}\) mediante la axiomática de Peano, dotándolo de una sólida estructura
+                algebraica (semianillo) y de orden. Asimismo, hemos visto cómo el desarrollo de los sistemas de
+                numeración posicionales, fundamentados en el Teorema Fundamental de la Numeración, resolvió el problema
+                de la representación y el cálculo eficiente.</p>
+            <p>Como docentes, es fundamental comprender que, aunque los números naturales parezcan elementales, su
+                asimilación requiere superar obstáculos epistemológicos similares a los históricos (distinción
+                cardinal/ordinal, el concepto de cero, el valor posicional). Un dominio profundo de estas estructuras
+                nos permitirá guiar a los alumnos desde la aritmética intuitiva hacia el pensamiento algebraico
+                abstracto, base de toda la matemática superior.</p>
+            <p><strong>Referencias legislativas y bibliográficas</strong></p>
+            <ul class="text-list">
+                <li>Peano, G. (Axiomas y construcción de \(\mathbb{N}\)).</li>
+                <li>Cantor, G. y Frege, F. (Teoría de conjuntos y cardinalidad).</li>
+                <li>Euclides (Algoritmo de la división).</li>
+            </ul>
+
+        </section>
+
+        <div id="video-modal" class="video-modal">
+            <div class="video-modal-header">
+                <span><i class="fa-brands fa-youtube" style="color: #facc15; margin-right: 8px;"></i>Explicación en
+                    Video</span>
+                <button onclick="closeVideo()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <iframe id="youtube-iframe" src=""
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+    </main>
+
+    <script>
+        // Funciones para el Video Modal
+        function openVideo(e, url) {
+            e.preventDefault();
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('youtube-iframe');
+            iframe.src = url; // Carga el video de YouTube
+            modal.classList.add('show');
+        }
+
+        function closeVideo() {
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('youtube-iframe');
+            modal.classList.remove('show');
+            // Retrasar el borrado del iframe para que coincida con el fin de la animación de opacidad
+            setTimeout(() => {
+                iframe.src = ''; // Detiene el video
+            }, 300);
+        }
+
+        // Toggle proofs
+        function toggleProof(btn) {
+            let el = btn.nextElementSibling;
+            while (el && !el.classList.contains('proof-content')) {
+                el = el.nextElementSibling;
+            }
+            if (el) {
+                if (el.classList.contains('open')) {
+                    el.classList.remove('open');
+                    btn.classList.remove('active');
+                } else {
+                    el.classList.add('open');
+                    btn.classList.add('active');
+                }
+            }
+        }
+
+        // Active link highlighting on scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -70% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        const activeId = entry.target.getAttribute('id');
+                        const activeLink = document.querySelector(`.nav-link[href="#${activeId}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            document.documentElement.style.scrollBehavior = "smooth";
+        });
+    </script>
+</body>
+
+</html>

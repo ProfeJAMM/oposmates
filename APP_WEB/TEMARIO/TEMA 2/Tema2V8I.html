@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 2: Teoría de Grafos y Árboles</title>
+
+    <!-- PWA Manifest & Icons -->
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icon-512.png">
+    <meta name="theme-color" content="#4338ca">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax for rendering LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)'], ['$', '$']],
+                displayMath: [['\\[', '\\]'], ['$$', '$$']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            /* Variables de entorno y colores */
+            --primary: #4338ca;
+            --primary-light: #6366f1;
+            --primary-dark: #312e81;
+            --bg-color: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --sidebar-bg: #ffffff;
+            --box-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
+            /* Colores específicos de cajas */
+            --def-border: #10b981;
+            --def-bg: #f0fdf4;
+            --def-icon: #047857;
+            
+            --ex-border: #3b82f6;
+            --ex-bg: #eff6ff;
+            --ex-icon: #1d4ed8;
+
+            /* Nuevos colores para Teoremas y Propiedades */
+            --theo-border: #ef4444;
+            --theo-bg: #fef2f2;
+            --theo-icon: #b91c1c;
+
+            --prop-border: #f59e0b;
+            --prop-bg: #fffbeb;
+            --prop-icon: #b45309;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow-sm);
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* --- LOGO CSS INTEGRADO --- */
+        .css-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+            user-select: none;
+        }
+        
+        .css-logo span { 
+            color: #facc15; 
+            margin-left: 2px; 
+        } 
+        
+        .css-logo-small {
+            width: 45px;
+            height: 45px;
+            font-size: 1.4rem;
+        }
+        
+        .css-logo-large {
+            width: 80px;
+            height: 80px;
+            font-size: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.60rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover {
+            background-color: #f1f5f9;
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            background-color: #e0e7ff;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: 280px;
+            padding: 3rem 4rem;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.125rem;
+            margin-top: 0.5rem;
+        }
+
+        .author-tag {
+            display: inline-block;
+            background-color: #e2e8f0;
+            color: #475569;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 3rem;
+        }
+
+        section h2 {
+            font-size: 1.875rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* --- BOXES (Definition, Example, Theorem, Property) --- */
+        .box {
+            background-color: var(--box-bg);
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border-left: 5px solid transparent;
+            position: relative;
+        }
+
+        .box.definition { border-left-color: var(--def-border); background-color: var(--def-bg); }
+        .box.example { border-left-color: var(--ex-border); background-color: var(--ex-bg); }
+        .box.theorem { border-left-color: var(--theo-border); background-color: var(--theo-bg); }
+        .box.property { border-left-color: var(--prop-border); background-color: var(--prop-bg); }
+
+        .box-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .box.definition .box-title { color: var(--def-icon); }
+        .box.example .box-title { color: var(--ex-icon); }
+        .box.theorem .box-title { color: var(--theo-icon); }
+        .box.property .box-title { color: var(--prop-icon); }
+
+        .box p { margin-bottom: 1rem; }
+        .box p:last-child { margin-bottom: 0; }
+        .box ul, .box ol { margin-left: 20px; margin-bottom: 1rem; }
+
+        /* --- PROOF / SOLUTION BUTTON & CONTENT --- */
+        .proof-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            border: 1px solid;
+        }
+
+        /* Colores contextuales para los botones de demostración */
+        .box.definition .proof-btn {
+            background-color: #dcfce7; /* Verde suave */
+            border-color: #86efac;
+            color: var(--def-icon);
+        }
+        .box.definition .proof-btn:hover {
+            background-color: var(--def-icon);
+            color: white;
+            border-color: var(--def-icon);
+        }
+
+        .box.example .proof-btn {
+            background-color: #dbeafe; /* Azul suave */
+            border-color: #93c5fd;
+            color: var(--ex-icon);
+        }
+        .box.example .proof-btn:hover {
+            background-color: var(--ex-icon);
+            color: white;
+            border-color: var(--ex-icon);
+        }
+
+        .box.theorem .proof-btn {
+            background-color: #fee2e2; /* Rojo suave */
+            border-color: #fca5a5;
+            color: var(--theo-icon);
+        }
+        .box.theorem .proof-btn:hover {
+            background-color: var(--theo-icon);
+            color: white;
+            border-color: var(--theo-icon);
+        }
+
+        .box.property .proof-btn {
+            background-color: #ffedd5; /* Naranja suave */
+            border-color: #fdba74;
+            color: var(--prop-icon);
+        }
+        .box.property .proof-btn:hover {
+            background-color: var(--prop-icon);
+            color: white;
+            border-color: var(--prop-icon);
+        }
+
+        .proof-content {
+            display: none;
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            border: 1px dashed var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        /* --- DIAGRAMAS SVG --- */
+        .diagram-container { 
+            text-align: center; 
+            margin: 2.5rem 0; 
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+        .diagram-container svg {
+            max-width: 100%;
+            height: auto;
+        }
+        .diagram-caption { 
+            font-size: 0.9rem; 
+            color: var(--text-muted); 
+            margin-top: 1rem; 
+            font-style: italic; 
+        }
+        /* Estilos específicos para SVG originales */
+        svg text { font-family: 'Georgia', serif; }
+        svg .math-text { font-family: 'Times New Roman', serif; font-style: italic; }
+
+        /* MathJax overflow handling */
+        mjx-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { width: 240px; }
+            .main-content { margin-left: 240px; padding: 2rem; }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                position: relative; 
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content { 
+                margin-left: 0; 
+                padding: 1.5rem; 
+            }
+            .nav-link { display: inline-block; margin-right: 0.5rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MENÚ LATERAL -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <div class="css-logo css-logo-small">J<span>&pi;</span></div>
+            <span>Teoría de Grafos</span>
+        </div>
+        <a href="#sec-1" class="nav-link active">1. Introducción</a>
+        <a href="#sec-2" class="nav-link">2. Definición</a>
+        <a href="#sec-3" class="nav-link">3. Grafos eulerianos</a>
+        <a href="#sec-4" class="nav-link">4. Matriz de adyacencia</a>
+        <a href="#sec-5" class="nav-link">5. Grafos hamiltonianos</a>
+        <a href="#sec-6" class="nav-link">6. Diagramas de árbol</a>
+        <a href="#sec-7" class="nav-link">7. Grafos planos y coloración</a>
+        <a href="#sec-8" class="nav-link">8. T. de los cuatro colores</a>
+        <a href="#sec-9" class="nav-link">9. Aplicaciones</a>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        <header class="page-header" style="display: flex; align-items: center; gap: 1.5rem;">
+            <div class="css-logo css-logo-large">J<span>&pi;</span></div>
+            <div>
+                <h1>Fundamentos y Aplicaciones de la Teoría de Grafos</h1>
+                <p>Diagramas de árbol</p>
+                <span class="author-tag"><i class="fa-solid fa-user-pen"></i> José A. Martínez Martínez</span>
+            </div>
+        </header>
+
+        <!-- SECCIÓN 1: INTRODUCCIÓN -->
+        <section id="sec-1">
+            <h2><span class="section-number">1</span> Introducción</h2>
+            
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Resumen del Tema</div>
+                <p>Este tema aborda la Teoría de Grafos desde sus fundamentos algebraicos y geométricos. A través de la abstracción de problemas reales (como los puentes de Königsberg o el diseño de redes), se estructuran conceptos como grafos eulerianos y hamiltonianos, matrices de adyacencia, árboles y grafos planos. Se culmina con aplicaciones prácticas y teoremas históricos como el de los cuatro colores o la fórmula de Euler, dotando de un cuerpo riguroso a la topología de redes.</p>
+            </div>
+
+            <p>Cuando hablamos de grafos una de las primeras imágenes que se nos viene a la mente es la de un diagrama de árbol. Una figura geométrica que tenemos que llevar al álgebra para poder manejarla mediante la aritmética. Todo este proceso, que es el que hacemos por ejemplo con la geometría del plano en primero de Bachillerato, es lo que nos permite demostrar propiedades y seguir construyendo hacia arriba para obtener un nuevo edificio matemático. La Teoría de Grafos es hoy por hoy un campo cuyas aplicaciones están fuera de duda. Desde el diseño de redes, pasando por la Psicología, la Economía, las estructuras de datos, planificación de proyectos hasta las propias Matemáticas.</p>
+            
+            <p>Comenzaremos nuestro edificio con las definición de grafo y sus tipos,</p>
+        </section>
+
+        <!-- SECCIÓN 2: DEFINICIÓN -->
+        <section id="sec-2">
+            <h2><span class="section-number">2</span> Definición</h2>
+            <p>Tal y como hemos dicho al principio, tenemos que comenzar dando estructura algebraica a objetos geométricos como el de la siguiente figura:</p>
+
+            <!-- SVG 1: Basic Graph -->
+            <div class="diagram-container">
+                <svg width="350" height="250" viewBox="0 0 350 250">
+                    <!-- Aristas -->
+                    <line x1="50" y1="125" x2="175" y2="50" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="125" x2="175" y2="200" stroke="#333" stroke-width="2"/>
+                    <line x1="175" y1="50" x2="300" y2="25" stroke="#333" stroke-width="2"/>
+                    <line x1="175" y1="50" x2="300" y2="100" stroke="#333" stroke-width="2"/>
+                    
+                    <!-- Etiquetas de aristas -->
+                    <text x="100" y="80" class="math-text" fill="#333">e₁</text>
+                    <text x="100" y="180" class="math-text" fill="#333">e₂</text>
+                    <text x="230" y="30" class="math-text" fill="#333">e₃</text>
+                    <text x="230" y="95" class="math-text" fill="#333">e₄</text>
+                    
+                    <!-- Vértices -->
+                    <circle cx="50" cy="125" r="5" fill="#1976d2" />
+                    <circle cx="175" cy="50" r="5" fill="#1976d2" />
+                    <circle cx="175" cy="200" r="5" fill="#1976d2" />
+                    <circle cx="300" cy="25" r="5" fill="#1976d2" />
+                    <circle cx="300" cy="100" r="5" fill="#1976d2" />
+
+                    <!-- Etiquetas de vértices -->
+                    <text x="25" y="130" class="math-text" fill="#1976d2">v₁</text>
+                    <text x="150" y="45" class="math-text" fill="#1976d2">v₂</text>
+                    <text x="190" y="205" class="math-text" fill="#1976d2">v₃</text>
+                    <text x="315" y="30" class="math-text" fill="#1976d2">v₄</text>
+                    <text x="315" y="105" class="math-text" fill="#1976d2">v₅</text>
+                </svg>
+                <div class="diagram-caption">Figura 1: Grafo simple G.</div>
+            </div>
+
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición de Grafo</div>
+                <p>Un grafo $G$ es un par $G=(V,E)$ siendo $V$ un conjunto no vacío de puntos, llamados vértices (o nodos), y $E \subseteq V \times V$ subconjunto de $V \times V$ cuyos elementos los llamaremos aristas ("edges" en inglés).</p>
+            </div>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo</div>
+                <p>El grafo $G$ de la figura es $G=(V,E)$ siendo $V=\{v_{1},v_{2},v_{3},v_{4},v_{5}\}$ y $E=\{e_{1},e_{2},e_{3},e_{4}\}$.</p>
+            </div>
+
+            <p>Podemos también escribir, por ejemplo, $e_{1}=v_{1}v_{2}$. De esta forma, las aristas son pares ordenados de vértices. Además, puesto que $e_{1}$ conecta $v_{1}$ y $v_2$, diremos que éstos son adyacentes y que, por ejemplo, $e_{1}$ y $e_2$ pasan por (o inciden en) $v_{1}$, lo que nos lleva al concepto de <strong>grado de un vértice</strong> $v$, $\partial(v)$ como el número de aristas que pasan por o inciden en $v$.</p>
+            
+            <p>Llamaremos <strong>lazo</strong> a toda arista que una un vértice consigo mismo. Un grafo $G$ es simple si no contiene lazos. Por convenio, un lazo contribuye en dos unidades al grado de un vértice. Un grafo es <strong>nulo</strong> si no contiene aristas. Un grafo es <strong>completo</strong> si tiene todas las aristas posibles. En particular, un grafo simple es completo si todos los vértices son adyacentes. A éstos últimos los denotaremos por $K_{n}$ si $|V|=n$. Esta última definición nos lleva a la siguiente:</p>
+
+            <div class="box property">
+                <div class="box-title"><i class="fa-solid fa-key"></i> Propiedad</div>
+                <p>El número de aristas de $K_{n}$ es $\binom{n}{2}=\frac{n(n-1)}{2}$</p>
+                
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Puesto que dos vértices son adyacentes por una única arista y todos los vértices son adyacentes, basta con calcular todas combinaciones de $n$ elementos tomados de dos en dos, es decir $C_{n,2}=\binom{n}{2}$.</p>
+                </div>
+            </div>
+
+            <p>Aunque acabamos de comenzar a construir el edificio de la Teoría de Grafos. Estamos en disposición de enunciar otra pequeña propiedad.</p>
+
+            <div class="box property">
+                <div class="box-title"><i class="fa-solid fa-key"></i> Lema de los apretones de manos</div>
+                <p>Sea $G=(V,E)$ un grafo. Sea $\partial(V)$ la suma de los grados de todos sus vértices y sea $|E|$ el cardinal de $E$. Entonces $\partial(V)=2|E|$ y el número de vértices de grado impar es par.</p>
+                
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Cada arista en un grafo conecta exactamente a dos vértices. Al sumar el grado de todos los vértices ($\sum_{v \in V} \partial(v)$), estamos contando cada arista exactamente dos veces (una vez por cada uno de sus vértices extremos). Por lo tanto, la suma total de los grados debe ser el doble del número de aristas, esto es, $\partial(V) = 2|E|$.</p>
+                    <p>Para la segunda parte del lema, dividimos los vértices en dos grupos: $V_{par}$ (de grado par) y $V_{impar}$ (de grado impar). La suma total es:</p>
+                    $$\sum_{v \in V} \partial(v) = \sum_{v \in V_{par}} \partial(v) + \sum_{v \in V_{impar}} \partial(v) = 2|E|$$
+                    <p>Como la suma de los grados pares es un número par y el total $2|E|$ también lo es, obligatoriamente la suma de los grados impares $\sum_{v \in V_{impar}} \partial(v)$ debe ser un número par. Para que una suma de números impares dé un resultado par, debe haber una cantidad par de sumandos.</p>
+                    
+                    <hr style="margin: 15px 0; border: 0; border-top: 1px dashed var(--border-color);">
+                    
+                    <p><strong>Comprobación con el ejemplo de la Figura 1:</strong><br> 
+                    $\partial(v_{1})=2$, $\partial(v_{2})=3$, $\partial(v_{3})=\partial(v_{4})=\partial(v_{5})=1$ por lo que:</p>
+                    $$\partial(V) = 2 + 3 + 1 + 1 + 1 = 8 = 2 \cdot 4 = 2 \cdot |E|$$
+                    <p>Además, vemos que el único vértice de grado par es $v_{1}$. En consecuencia el resto son de grado impar y como hay cinco vértices, el número de vértices de grado impar es cuatro que es un número par.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Tipos de Grafos</h3>
+            
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> G1. Multigrafo</div>
+                <p>Un grafo $G=(V,E)$ diremos que es un multigrafo si un par de vértices adyacentes lo son por posiblemente más de una arista. En la figura los vértices $v_{1}$ y $v_{2}$ son adyacentes por las aristas $e_{1}$ y $e_{5}$.</p>
+            </div>
+
+            <!-- SVG 2: Multigrafo y Königsberg -->
+            <div class="diagram-container">
+                <svg width="600" height="250" viewBox="0 0 600 250">
+                    <!-- Parte izquierda: Multigrafo simple -->
+                    <path d="M 50 125 Q 112 30 175 50" fill="none" stroke="#333" stroke-width="2"/>
+                    <path d="M 50 125 Q 112 110 175 50" fill="none" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="125" x2="175" y2="200" stroke="#333" stroke-width="2"/>
+                    <line x1="175" y1="50" x2="300" y2="25" stroke="#333" stroke-width="2"/>
+                    <line x1="175" y1="50" x2="300" y2="100" stroke="#333" stroke-width="2"/>
+                    
+                    <text x="90" y="60" class="math-text" fill="#333">e₁</text>
+                    <text x="130" y="110" class="math-text" fill="#333">e₅</text>
+                    <text x="100" y="180" class="math-text" fill="#333">e₂</text>
+                    
+                    <circle cx="50" cy="125" r="5" fill="#1976d2" />
+                    <circle cx="175" cy="50" r="5" fill="#1976d2" />
+                    <circle cx="175" cy="200" r="5" fill="#1976d2" />
+                    <circle cx="300" cy="25" r="5" fill="#1976d2" />
+                    <circle cx="300" cy="100" r="5" fill="#1976d2" />
+
+                    <text x="25" y="130" class="math-text" fill="#1976d2">v₁</text>
+                    <text x="150" y="45" class="math-text" fill="#1976d2">v₂</text>
+                    
+                    <!-- Separador -->
+                    <line x1="330" y1="20" x2="330" y2="230" stroke="#ccc" stroke-dasharray="4"/>
+                    <path d="M 315 125 L 345 125 M 335 115 L 345 125 L 335 135" fill="none" stroke="#333" stroke-width="2"/>
+
+                    <!-- Parte derecha: Grafo de Königsberg -->
+                    <circle cx="380" cy="125" r="5" fill="#1976d2" /> <!-- A -->
+                    <circle cx="480" cy="50" r="5" fill="#1976d2" /> <!-- B -->
+                    <circle cx="580" cy="125" r="5" fill="#1976d2" /> <!-- C -->
+                    <circle cx="480" cy="200" r="5" fill="#1976d2" /> <!-- D -->
+
+                    <text x="360" y="130" class="math-text" fill="#1976d2">A</text>
+                    <text x="475" y="40" class="math-text" fill="#1976d2">B</text>
+                    <text x="590" y="130" class="math-text" fill="#1976d2">C</text>
+                    <text x="475" y="220" class="math-text" fill="#1976d2">D</text>
+
+                    <!-- Aristas Königsberg -->
+                    <path d="M 380 125 Q 430 50 480 50" fill="none" stroke="#333" stroke-width="2"/>
+                    <path d="M 380 125 Q 400 10 480 50" fill="none" stroke="#333" stroke-width="2"/>
+                    <line x1="480" y1="50" x2="580" y2="125" stroke="#333" stroke-width="2"/>
+                    <line x1="480" y1="200" x2="580" y2="125" stroke="#333" stroke-width="2"/>
+                    <line x1="380" y1="125" x2="580" y2="125" stroke="#333" stroke-width="2"/>
+                    <path d="M 380 125 Q 430 200 480 200" fill="none" stroke="#333" stroke-width="2"/>
+                    <path d="M 380 125 Q 400 240 480 200" fill="none" stroke="#333" stroke-width="2"/>
+
+                    <text x="430" y="70" class="math-text" fill="#333" font-size="12">e₁</text>
+                    <text x="420" y="30" class="math-text" fill="#333" font-size="12">e₂</text>
+                    <text x="540" y="75" class="math-text" fill="#333" font-size="12">e₃</text>
+                    <text x="540" y="180" class="math-text" fill="#333" font-size="12">e₄</text>
+                    <text x="430" y="190" class="math-text" fill="#333" font-size="12">e₅</text>
+                    <text x="420" y="230" class="math-text" fill="#333" font-size="12">e₆</text>
+                    <text x="480" y="120" class="math-text" fill="#333" font-size="12">e₇</text>
+                </svg>
+                <div class="diagram-caption">Figura 2: Multigrafo (Izquierda) y abstracción del problema de los Puentes de Königsberg (Derecha).</div>
+            </div>
+
+            <p>Diremos que un multigrafo $G$ es de orden $m$ si éste es el mayor número de aristas que unen dos vértices adyacentes.</p>
+
+            <p>Un ejemplo de multigrafo es el de los Puentes de Königsberg, que dio origen a la Teoría de Grafos. Euler, quien buscando la solución al problema de los puentes a través de un grafo sentó las bases que estudiamos en este tema.</p>
+
+            <p>El problema era el siguiente. Dado el mapa de Königsberg, con el río Pregel dividiendo el plano en cuatro regiones distintas, que están unidas a través de los siete puentes, ¿es posible dar un paseo comenzando desde cualquiera de estas regiones, pasando por todos los puentes, recorriendo solo una vez cada uno, y regresando al mismo punto de partida? (Wikipedia).</p>
+
+            <p>Euler convirtió la imagen de la ciudad con sus puentes en un grafo. Tradujo el enunciado en un problema que podemos resolver de la Teoría de Grafos. Ahora bien, necesitamos seguir levantando pisos en nuestro edificio para poder tener las herramientas necesarias que nos lleven a la resolución del problema anterior.</p>
+
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> G2. Grafo dirigido</div>
+                <p>Un grafo dirigido $G=(V,E)$ es aquél cuyos elementos de $E$ son pares ordenados. Es decir, si $e_{i}=(v_{i1},v_{i2})\ne(v_{i2},v_{i1})$. Los conjuntos $V$ y $E$ son: $V=\{v_{1},v_{2},v_{3},v_{4},v_{5}\}$ y $E=\{e_{1},e_{2},e_{3},e_{4},e_{5},e_{6}\}$, siendo:</p>
+                $$ e_{1}=(v_{1},v_{2}), e_{2}=(v_{1},v_{3}); e_{3}=(v_{2},v_{4}), e_{4}=(v_{2},v_{5}), e_{5}=(v_{1},v_{5}), e_{6}=(v_{3},v_{5}) $$
+            </div>
+
+            <!-- SVG 3: Grafo Dirigido -->
+            <div class="diagram-container">
+                <svg width="350" height="250" viewBox="0 0 350 250">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+                        </marker>
+                    </defs>
+                    <!-- Aristas con flechas -->
+                    <line x1="50" y1="150" x2="170" y2="75" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                    <line x1="50" y1="150" x2="170" y2="225" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                    <line x1="175" y1="75" x2="295" y2="40" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                    <line x1="175" y1="75" x2="295" y2="115" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                    <line x1="50" y1="150" x2="292" y2="120" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                    <line x1="175" y1="225" x2="295" y2="125" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                    
+                    <text x="100" y="100" class="math-text" fill="#333">e₁</text>
+                    <text x="100" y="210" class="math-text" fill="#333">e₂</text>
+                    <text x="230" y="45" class="math-text" fill="#333">e₃</text>
+                    <text x="230" y="85" class="math-text" fill="#333">e₄</text>
+                    <text x="180" y="150" class="math-text" fill="#333">e₅</text>
+                    <text x="250" y="190" class="math-text" fill="#333">e₆</text>
+
+                    <!-- Vértices -->
+                    <circle cx="50" cy="150" r="5" fill="#1976d2" />
+                    <circle cx="175" cy="75" r="5" fill="#1976d2" />
+                    <circle cx="175" cy="225" r="5" fill="#1976d2" />
+                    <circle cx="300" cy="35" r="5" fill="#1976d2" />
+                    <circle cx="300" cy="120" r="5" fill="#1976d2" />
+
+                    <!-- Etiquetas de vértices -->
+                    <text x="25" y="155" class="math-text" fill="#1976d2">v₁</text>
+                    <text x="150" y="65" class="math-text" fill="#1976d2">v₂</text>
+                    <text x="190" y="235" class="math-text" fill="#1976d2">v₃</text>
+                    <text x="315" y="40" class="math-text" fill="#1976d2">v₄</text>
+                    <text x="315" y="125" class="math-text" fill="#1976d2">v₅</text>
+                </svg>
+                <div class="diagram-caption">Figura 3: Grafo dirigido.</div>
+            </div>
+
+            <p>A las aristas de un grafo dirigido las podemos llamar <strong>arcos</strong>. Los grafos dirigidos se usan mucho en probabilidad cuando hacemos uso del Teorema de la Probabilidad Total y el Teorema de Bayes. Los típicos problemas de bolas que aparecen en primero y segundo de Bachillerato:</p>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo (Probabilidad)</div>
+                <p>Si tenemos dos urnas, $\mathcal{U}_{1}=\{3V,4R\}$ y $\mathcal{U}_{2}=\{5V,2R\}$, la primera con 3 bolas verdes y 4 rojas y la segunda con 5 verdes y 2 rojas. Calcula la probabilidad de que al coger una bola al azar, ésta sea verde. Calcula además, si la bola ha sido roja, la probabilidad de que haya sido tomada de la urna 2.</p>
+            </div>
+
+            <p>El problema se puede resolver de manera sencilla mediante el siguiente grafo dirigido:</p>
+
+            <!-- SVG 4: Árbol de Probabilidad -->
+            <div class="diagram-container">
+                <svg width="400" height="250" viewBox="0 0 400 250">
+                    <defs>
+                        <marker id="arrowP" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#555" />
+                        </marker>
+                    </defs>
+                    <!-- Hacia U1 y U2 -->
+                    <line x1="50" y1="125" x2="140" y2="60" stroke="#555" stroke-width="2" marker-end="url(#arrowP)"/>
+                    <line x1="50" y1="125" x2="140" y2="190" stroke="#555" stroke-width="2" marker-end="url(#arrowP)"/>
+                    
+                    <text x="75" y="80" class="math-text" fill="#333">1/2</text>
+                    <text x="75" y="180" class="math-text" fill="#333">1/2</text>
+                    
+                    <text x="145" y="55" class="math-text" fill="#1976d2">U₁</text>
+                    <text x="145" y="205" class="math-text" fill="#1976d2">U₂</text>
+
+                    <!-- Desde U1 -->
+                    <line x1="165" y1="50" x2="280" y2="20" stroke="#555" stroke-width="2" marker-end="url(#arrowP)"/>
+                    <line x1="165" y1="50" x2="280" y2="80" stroke="#555" stroke-width="2" marker-end="url(#arrowP)"/>
+                    
+                    <text x="210" y="30" class="math-text" fill="#333">3/7</text>
+                    <text x="210" y="85" class="math-text" fill="#333">4/7</text>
+                    
+                    <text x="290" y="25" class="math-text" fill="#d32f2f">V</text>
+                    <text x="290" y="85" class="math-text" fill="#d32f2f">R</text>
+
+                    <!-- Desde U2 -->
+                    <line x1="165" y1="200" x2="280" y2="170" stroke="#555" stroke-width="2" marker-end="url(#arrowP)"/>
+                    <line x1="165" y1="200" x2="280" y2="230" stroke="#555" stroke-width="2" marker-end="url(#arrowP)"/>
+                    
+                    <text x="210" y="175" class="math-text" fill="#333">5/7</text>
+                    <text x="210" y="235" class="math-text" fill="#333">2/7</text>
+                    
+                    <text x="290" y="175" class="math-text" fill="#d32f2f">V</text>
+                    <text x="290" y="235" class="math-text" fill="#d32f2f">R</text>
+                </svg>
+                <div class="diagram-caption">Figura 4: Diagrama de árbol aplicado a la probabilidad condicional.</div>
+            </div>
+
+            <p>Esto nos lleva a la la definición de red.</p>
+
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> G3. Red</div>
+                <p>Una red es una terna $(V, E, \lambda)$ donde $(V, E)$ es un grafo y $\lambda$ una función $\lambda:E\longrightarrow\mathbb{R}$ que asocia a cada arco un escalar.</p>
+            </div>
+
+            <p>Si el grafo es dirigido, entonces hablamos de una red dirigida. Es el caso del ejemplo anterior. En el diagrama de árbol tenemos, por ejemplo, que $\lambda(\mathcal{U}_{1},V)=3/7$</p>
+
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> G4. Grafo conexo</div>
+                <p>Diremos que $G^{\prime}=(V^{\prime},E^{\prime})$ es un subgrafo de $G=(V,E)$, $G^{\prime}\subseteq G$, si $V \subseteq V^{\prime}$ y $E \subseteq E^{\prime}$.</p>
+                <p>Dados dos grafos $G_{1}=(V_{1},E_{1})$ y $G_{2}=(V_{2},E_{2})$. Diremos que $G_{1}$ y $G_{2}$ son disjuntos si $V_{1}\cap V_{2}=\emptyset$. Podemos definir el grafo $G=(V,E)$ unión de $G_{1}$ y $G_{2}$ como $G=G_{1}\cup G_{2}$ siendo $V=V_{1}\cup V_{2}$ y $E=E_{1}\cup E_{2}$.</p>
+                <p>Un grafo $G$ es <strong>conexo</strong> si no se puede poner como unión disjunta de dos grafos. En caso contrario, diremos que el grafo es no conexo y los subgrafos que los componen se llamarán <strong>componentes conexas</strong>.</p>
+            </div>
+
+            <p>La siguiente figura nos muestra un ejemplo de cada caso:</p>
+
+            <!-- SVG 5: Grafo Conexo vs No Conexo -->
+            <div class="diagram-container">
+                <svg width="600" height="250" viewBox="0 0 600 250">
+                    <!-- Mitad Izquierda: Conexo -->
+                    <text x="120" y="20" font-weight="bold" fill="#333">Grafo conexo</text>
+                    
+                    <line x1="50" y1="50" x2="50" y2="200" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="125" x2="200" y2="125" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="200" x2="200" y2="200" stroke="#333" stroke-width="2"/>
+                    <line x1="200" y1="125" x2="200" y2="200" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="50" x2="200" y2="200" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="200" x2="200" y2="125" stroke="#333" stroke-width="2"/>
+                    
+                    <circle cx="50" cy="50" r="5" fill="#1976d2" />
+                    <circle cx="50" cy="125" r="5" fill="#1976d2" />
+                    <circle cx="50" cy="200" r="5" fill="#1976d2" />
+                    <circle cx="200" cy="125" r="5" fill="#1976d2" />
+                    <circle cx="200" cy="200" r="5" fill="#1976d2" />
+                    
+                    <text x="30" y="45" class="math-text" fill="#1976d2">v₁</text>
+                    <text x="25" y="130" class="math-text" fill="#1976d2">v₂</text>
+                    <text x="25" y="210" class="math-text" fill="#1976d2">v₄</text>
+                    <text x="215" y="130" class="math-text" fill="#1976d2">v₃</text>
+                    <text x="215" y="210" class="math-text" fill="#1976d2">v₅</text>
+                    
+                    <!-- Separador -->
+                    <line x1="300" y1="10" x2="300" y2="240" stroke="#ccc" stroke-dasharray="4"/>
+
+                    <!-- Mitad Derecha: No conexo -->
+                    <text x="420" y="20" font-weight="bold" fill="#333">Grafo no conexo</text>
+                    
+                    <!-- Componente 1 -->
+                    <line x1="350" y1="125" x2="450" y2="50" stroke="#333" stroke-width="2"/>
+                    <line x1="350" y1="125" x2="450" y2="200" stroke="#333" stroke-width="2"/>
+                    <line x1="450" y1="50" x2="550" y2="125" stroke="#333" stroke-width="2"/>
+                    <line x1="450" y1="200" x2="550" y2="125" stroke="#333" stroke-width="2"/>
+                    <line x1="350" y1="125" x2="550" y2="125" stroke="#333" stroke-width="2"/>
+
+                    <circle cx="350" cy="125" r="5" fill="#1976d2" />
+                    <circle cx="450" cy="50" r="5" fill="#1976d2" />
+                    <circle cx="450" cy="200" r="5" fill="#1976d2" />
+                    <circle cx="550" cy="125" r="5" fill="#1976d2" />
+
+                    <!-- Componente 2 (Aislada) -->
+                    <line x1="400" y1="160" x2="500" y2="160" stroke="#333" stroke-width="2"/>
+                    <circle cx="400" cy="160" r="5" fill="#d32f2f" />
+                    <circle cx="500" cy="160" r="5" fill="#d32f2f" />
+                </svg>
+                <div class="diagram-caption">Figura 5: Comparativa visual entre grafos conexos y no conexos.</div>
+            </div>
+
+            <p>Vamos ya camino de poder dar respuesta al problema de los puentes de Königsberg.</p>
+
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> G5. Caminos, ciclos y circuitos</div>
+                <p>Dado un grafo $G=(V,E)$ con $V=\{v_{1},v_{2},...v_{n}\}$. Un <strong>camino</strong> o <strong>trayectoria</strong> es una sucesión del tipo $v_{1}, e_{1}, v_{2}, e_{2}, ... e_{n-1}, v_{n}$, de tal manera que cada $e_{j}=v_{j}v_{j+1}$. A los vértices $v_{1}$ y $v_{n}$ los llamaremos respectivamente extremo inicial y final del camino. Diremos que es cerrado si $v_{1}=v_{n}$. Además, la longitud del camino será el número de aristas del mismo.</p>
+                <p>Un <strong>ciclo</strong> es un camino cerrado, de modo que los únicos vértices que se repiten son los extremos.</p>
+                <p>Un <strong>circuito</strong> es un camino cerrado que no repite aristas.</p>
+            </div>
+
+            <p>En el ejemplo de la figura 1, un circuito será $v_{1}\rightarrow v_{2}\rightarrow v_{3}\rightarrow v_{4}\rightarrow v_{5}\rightarrow v_{1}$. Éste además, es una trayectoria simple porque no repite vértices.</p>
+
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> G6. Camino euleriano</div>
+                <p>Un camino diremos que es euleriano si contiene todas las aristas del grafo y además es simple. Un circuito es euleriano si es simple y contiene todas las aristas de $G$.</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: GRAFOS EULERIANOS -->
+        <section id="sec-3">
+            <h2><span class="section-number">3</span> Grafos eulerianos</h2>
+            <p>Estamos a un paso de dar respuesta al problema de los puentes. Antes necesitamos dar una definición mucho más concreta que las que hemos dado anteriormente. Es por eso que se merece un trato particular.</p>
+
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición</div>
+                <p>Un grafo $G=(V,E)$ diremos que es Euleriano si es conexo y además admite un circuito euleriano.</p>
+            </div>
+
+            <p>Es fácil probar que un grafo euleriano es conexo salvo que tenga vértices aislados, es decir, vértices a los que ni llegue ni parta ninguna arista.</p>
+
+            <p>El siguiente teorema responde negativamente a la cuestión presentada en el problema de los puentes.</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-scroll"></i> Teorema</div>
+                <p>Si un grafo $G$ es euleriano, entonces todo vértice tiene grado par.</p>
+                
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Sea $v\in V$ un vértice del grafo. Sea $C$ un circuito euleriano que contiene todas las aristas de $G$.</p>
+                    <p>A toda arista $a$ que llega a $v$ le corresponde otra arista $a^{\prime}$ por la que continúa el circuito puesto que no se repiten aristas.</p>
+                    <p>Si la arista $a$ parte de $v$ y no sale por otra es porque $v$ es el extremo inicial y final del circuito, por lo que a la $a$ le corresponde la última arista del circuito $a^{\prime}$.</p>
+                    <p>En todo caso, podemos asegurar que el grado de $v$ es par.</p>
+                </div>
+            </div>
+
+            <p>Volviendo al problema de los puentes de Königsberg, podemos asegurar que puesto que todos los vértices no tienen grado par, éste grafo no es euleriano y por lo tanto <strong>no existe solución</strong> al problema.</p>
+        </section>
+
+        <!-- SECCIÓN 4: MATRIZ DE ADYACENCIA -->
+        <section id="sec-4">
+            <h2><span class="section-number">4</span> Matriz de adyacencia</h2>
+            <p>Otra de las herramientas que nos ayudarán a seguir construyendo son las matrices. Podemos asociar una matriz a un grafo mediante la siguiente definición.</p>
+
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición</div>
+                <p>Sea $G=(V,E)$ un grafo. Se define la matriz de adyacencia de $G$ a la matriz $M_{G}(m_{ij})\in\mathcal{M}_{n\times n}$ (de orden $n$ por $n$) siendo</p>
+                $$ m_{ij}=\begin{cases}1 & \text{si } (v_{i},v_{j})\in E\\ 0 & \text{si } (v_{i},v_{j})\notin E\end{cases} $$
+                <p>siendo $V=\{v_{1},v_{2},...,v_{n}\}$.</p>
+            </div>
+
+            <p>Esta notación la podemos hacer menos farragosa sin más que tomar los vértices $V=\{1,2,...,n\}$. Siempre que el grafo no sea dirigido, la matriz de adyacencia será una matriz <strong>simétrica</strong> pues si $(v_{i},v_{j})\in E$ entonces $(v_{j},v_{i})\in E$. Además, si $G$ es un multigrafo de grado $m$, las entradas $m_{ij}\in\{0,1,...,m\}$.</p>
+
+            <p>La matriz de un grafo como tal no contiene mucha información, es denotar un grafo mediante otro objeto matemático. Sin embargo, si consideramos las potencias de $M$, $M^{k}$, éstas si que nos proporcionan nuevas herramientas.</p>
+
+            <p>Antes de seguir veamos un ejemplo de cómo funciona la matriz de adyacencia.</p>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo</div>
+                <p>La Matriz de adyacencia del grafo $G$ de la figura inicial (Figura 1) es una matriz de orden $5\times 5$ y es:</p>
+                $$ M=M_{G}=\begin{pmatrix}0&1&1&0&0\\ 1&0&0&1&1\\ 1&0&0&0&0\\ 0&1&0&0&0\\ 0&1&0&0&0\end{pmatrix} $$
+            </div>
+
+            <p>Podemos comprobar que efectivamente es una matriz simétrica.</p>
+            
+            <p>Consideremos ahora la matriz elevada al cuadrado:</p>
+            $$ M^{2}=M\cdot M=\begin{pmatrix}2&0&0&1&1\\ 0&3&1&0&0\\ 0&1&0&0&0\\ 1&0&0&1&1\\ 1&0&0&1&1\end{pmatrix} $$
+            <p>Tomemos por un momento $m_{22}=3$. Observemos los vértices $v_{2}$ y comprobemos si existe algún camino que me lo tenga como extremos inicial y final. Comprobamos que hay 3 y que además, éstos tienen longitud 2. De la misma manera podemos comprobar que hay 2 caminos cerrados de longitud 2 que tienen a $v_{1}$ como extremo. El resto de entradas son ceros o unos, lo que nos ayuda a saber si al menos existe algún camino (que además será de longitud 2) que una los vértices que marcan las posiciones. Por ejemplo, como $m_{14}=1$ es que existe un camino de longitud 2 que los une. En cambio, $m_{13}=0$ por lo que no lo hay.</p>
+
+            <p>Demostremos el caso general.</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-scroll"></i> Teorema</div>
+                <p>En las condiciones de arriba, sea $M_{G}$ la matriz de adyacencia del grafo $G$. La entrada $m_{ij}$ de la matriz $M_{G}^{k}$ nos dice el número de caminos, de longitud $k$, que conectan $v_{i}$ con $v_{j}$, para todo $i,j\in\{1,2,...n\}$.</p>
+                
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Demostremos por el método de inducción.</p>
+                    <p>Es evidente que para $k=1$ cada entrada $m_{ij}$ es el número de caminos, de longitud 1, que conectan los vértices $v_{i}$ con $v_{j}$.</p>
+                    <p>Supongamos ahora que las entradas de la matriz $M^{k-1}$, $m_{ij}^{\prime}$ corresponden con el número de caminos de longitud $k-1$ que hay entre los vértices $v_{i}$ y $v_{j}$. Como $M^{k}=M^{k-1} \cdot M$, la entrada $m_{ij}^{\prime\prime}$ de $M^{k}$ será:</p>
+                    $$ m_{ij}^{\prime\prime}=\sum_{l=1}^{n}m_{il}^{\prime}\cdot m_{lj} $$
+                    <p>Si tomamos por ejemplo el término para $l=1$:</p>
+                    $$ m_{i1}^{\prime}\cdot m_{1j}=\begin{cases}m_{i1}^{\prime}&\text{si } m_{1j}=1\\ 0&\text{si } m_{1j}=0\\ ......\end{cases} $$
+                    <p>Si $m_{1j}=1$ es que hay una arista que conecta $v_{1}$ con $v_{j}$ por lo que sí habrá $m_{i1}^{\prime}$ caminos de longitud $k$ que unen $v_{i}$ con $v_{j}$ que pasan por $v_{1}$. Si $m_{1j}=0$ no habrá ningún camino que una $v_{i}$ con $v_{j}$ y que pase por $v_{1}$.</p>
+                    <p>Tomando todos los sumandos no nulos, conseguimos el número de caminos de longitud $k$ que unen $v_{i}$ con $v_{j}$.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: GRAFOS HAMILTONIANOS -->
+        <section id="sec-5">
+            <h2><span class="section-number">5</span> Grafos hamiltonianos</h2>
+            <p>Si replanteamos el problema de los puentes de Königsberg, proponiéndonos esta vez pasar por todos los vértices del grafo pero sólo una única vez, nos encontramos con un nuevo tipo de ciclo. Esto nos dos da pie a la siguiente definición:</p>
+
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición</div>
+                <p>Dado un grafo $G$, un ciclo Hamiltoniano es un ciclo que visita cada uno de los vértices del grafo exactamente una vez.</p>
+                <p>Un grafo diremos que es Hamiltoniano si admite un ciclo Hamiltoniano.</p>
+            </div>
+
+            <p>El nombre de este grafo se debe a William Hamilton que en 1857 propuso el juego de recorrer los vértices de un dodecaedro regular; sólido regular formado por 12 pentágonos regulares. Puesto que era sumamente incómodo trabajar con el sólido, Hamilton redujo al plano el problema mediante un grafo como el de la figura. De esta manera podemos replantear el juego buscando un ciclo que recorra el grafo de la figura, pero pasando sólo una vez por cada vértice.</p>
+
+            <!-- SVG 6: Grafo del Dodecaedro -->
+            <div class="diagram-container">
+                <svg width="400" height="350" viewBox="-150 -150 300 300">
+                    <polygon points="0,-130 123,-40 76,105 -76,105 -123,-40" fill="rgba(211,47,47,0.1)" stroke="#d32f2f" stroke-width="2"/>
+                    <polygon points="0,-80 76,-25 47,65 -47,65 -76,-25" fill="rgba(255,143,0,0.2)" stroke="#ff8f00" stroke-width="2"/>
+                    <polygon points="0,-40 38,-12 23,32 -23,32 -38,-12" fill="rgba(25,118,210,0.3)" stroke="#1976d2" stroke-width="2"/>
+                    
+                    <!-- Conexiones Radiales -->
+                    <line x1="0" y1="-130" x2="0" y2="-80" stroke="#333" stroke-width="2"/>
+                    <line x1="123" y1="-40" x2="76" y2="-25" stroke="#333" stroke-width="2"/>
+                    <line x1="76" y1="105" x2="47" y2="65" stroke="#333" stroke-width="2"/>
+                    <line x1="-76" y1="105" x2="-47" y2="65" stroke="#333" stroke-width="2"/>
+                    <line x1="-123" y1="-40" x2="-76" y2="-25" stroke="#333" stroke-width="2"/>
+                    
+                    <line x1="0" y1="-80" x2="0" y2="-40" stroke="#333" stroke-width="2"/>
+                    <line x1="76" y1="-25" x2="38" y2="-12" stroke="#333" stroke-width="2"/>
+                    <line x1="47" y1="65" x2="23" y2="32" stroke="#333" stroke-width="2"/>
+                    <line x1="-47" y1="65" x2="-23" y2="32" stroke="#333" stroke-width="2"/>
+                    <line x1="-76" y1="-25" x2="-38" y2="-12" stroke="#333" stroke-width="2"/>
+
+                    <!-- Nodos -->
+                    <circle cx="0" cy="-130" r="4" fill="#333"/>
+                    <circle cx="123" cy="-40" r="4" fill="#333"/>
+                    <circle cx="76" cy="105" r="4" fill="#333"/>
+                    <circle cx="-76" cy="105" r="4" fill="#333"/>
+                    <circle cx="-123" cy="-40" r="4" fill="#333"/>
+
+                    <circle cx="0" cy="-80" r="4" fill="#333"/>
+                    <circle cx="76" cy="-25" r="4" fill="#333"/>
+                    <circle cx="47" cy="65" r="4" fill="#333"/>
+                    <circle cx="-47" cy="65" r="4" fill="#333"/>
+                    <circle cx="-76" cy="-25" r="4" fill="#333"/>
+                    
+                    <circle cx="0" cy="-40" r="4" fill="#333"/>
+                    <circle cx="38" cy="-12" r="4" fill="#333"/>
+                    <circle cx="23" cy="32" r="4" fill="#333"/>
+                    <circle cx="-23" cy="32" r="4" fill="#333"/>
+                    <circle cx="-38" cy="-12" r="4" fill="#333"/>
+                </svg>
+                <div class="diagram-caption">Figura 6: Grafo plano asociado al dodecaedro regular de Hamilton.</div>
+            </div>
+
+            <p>La siguiente proposición es sumamente constructiva:</p>
+
+            <div class="box property">
+                <div class="box-title"><i class="fa-solid fa-key"></i> Propiedad</div>
+                <p>Si $G = K_n$ es el grafo completo de $n$ vértices (con $n > 2$), entonces $G$ es Hamiltoniano.</p>
+            </div>
+
+            <p>Con esta proposición pretendemos hacer ver que cuantas más aristas tenga un grafo, más probabilidades de admitir un ciclo Hamiltoniano tendrá. Y con esta idea sobre la mesa podemos demostrar el siguiente:</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-scroll"></i> Teorema (Dirac)</div>
+                <p>Todo grafo con $n$ vértices ($n \ge 3$) y grado mínimo $\partial(v) \ge n/2$ es Hamiltoniano.</p>
+                
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Se puede demostrar fácilmente que el grafo es conexo. Sea $C=v_{1}...v_{k}$ el camino más largo de $G$. Notemos que los vértices $v_{1}$ y $v_{k}$ tienen a todos sus vecinos en $C$, pues si no, podríamos encontrar un camino más largo que $C$. Es decir, en $C$ hay al menos $n/2$ vecinos de $v_{1}$ y al menos $n/2$ vecinos de $v_{k}$.</p>
+                    <p>Por el principio del palomar, necesariamente hay un vértice $v_{i}$ vecino de $v_{k}$ y un vértice $v_{i+1}$ vecino de $v_{1}$, obteniendo el subgrafo de la figura.</p>
+                    
+                    <div class="diagram-container">
+                        <svg width="500" height="150" viewBox="0 0 500 150">
+                            <line x1="50" y1="75" x2="150" y2="75" stroke="#333" stroke-width="2"/>
+                            <line x1="150" y1="75" x2="200" y2="75" stroke="#ccc" stroke-dasharray="4"/>
+                            <line x1="200" y1="75" x2="300" y2="75" stroke="#333" stroke-width="2"/>
+                            <line x1="300" y1="75" x2="350" y2="75" stroke="#ccc" stroke-dasharray="4"/>
+                            <line x1="350" y1="75" x2="450" y2="75" stroke="#333" stroke-width="2"/>
+                            
+                            <path d="M 50 75 Q 175 -50 300 75" fill="none" stroke="#d32f2f" stroke-width="2"/> <!-- v1 a v_{i+1} -->
+                            <path d="M 250 75 Q 350 200 450 75" fill="none" stroke="#1976d2" stroke-width="2"/> <!-- v_i a v_k -->
+
+                            <circle cx="50" cy="75" r="4" fill="#333"/> <text x="40" y="95" class="math-text">v₁</text>
+                            <circle cx="100" cy="75" r="4" fill="#333"/> <text x="90" y="95" class="math-text">v₂</text>
+                            <circle cx="250" cy="75" r="4" fill="#333"/> <text x="240" y="95" class="math-text">vᵢ</text>
+                            <circle cx="300" cy="75" r="4" fill="#333"/> <text x="290" y="95" class="math-text">vᵢ₊₁</text>
+                            <circle cx="400" cy="75" r="4" fill="#333"/> <text x="390" y="95" class="math-text">vₖ₋₁</text>
+                            <circle cx="450" cy="75" r="4" fill="#333"/> <text x="440" y="95" class="math-text">vₖ</text>
+                        </svg>
+                    </div>
+
+                    <p>Notemos que podemos construir un ciclo $C$ que recorre todos los vértices de $C$:</p>
+                    $$ C = v_{1} v_{i+1} ... v_{k} v_{i} v_{i-1} ... v_{2} v_{1} $$
+                    <p>Más aún, este ciclo es un ciclo Hamiltoniano de $G$. Supongamos que esto no es cierto, es decir, que hay vértices del grafo $G$ que no están en $C$. Como el grafo es conexo, alguno de estos vértices tiene que estar conectado a algún vértice de $C$, pero esto es una contradicción, pues significa que uniendo $C$ a ese vértice, podemos construir un camino de largo $k$, lo que no es posible, pues $C$ era el camino de mayor largo del grafo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 6: DIAGRAMAS DE ÁRBOL -->
+        <section id="sec-6">
+            <h2><span class="section-number">6</span> Diagramas de árbol</h2>
+            <p>Hemos hablado anteriormente de los diagramas de árbol como una herramienta muy útil en Probabilidad. Recordemos que la usamos para resolver problemas de probabilidad total y de Bayes. Pasemos ahora a estudiar este tipo de grafos con más detenimiento.</p>
+            <p>Estos grafos fueron introducidos por Kirchoff en sus trabajos sobre redes eléctricas. Pasemos a construir mediante las primeras definiciones.</p>
+
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición</div>
+                <p>Un <strong>árbol</strong> es un grafo conexo $G$ que no admite ciclos.</p>
+                <p>Si quitamos la condición de ser conexo, nos encontramos que un <strong>bosque</strong> es un grafo sin ciclos. Las componentes conexas de un bosque serán los árboles que lo forman.</p>
+            </div>
+
+            <p>Un ejemplo de diagrama de árbol es el siguiente:</p>
+
+            <!-- SVG 7: Árbol Estándar -->
+            <div class="diagram-container">
+                <svg width="400" height="250" viewBox="0 0 400 250">
+                    <line x1="50" y1="125" x2="150" y2="50" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="125" x2="150" y2="200" stroke="#333" stroke-width="2"/>
+                    <line x1="150" y1="50" x2="275" y2="25" stroke="#333" stroke-width="2"/>
+                    <line x1="150" y1="50" x2="275" y2="85" stroke="#333" stroke-width="2"/>
+                    <line x1="150" y1="200" x2="275" y2="165" stroke="#333" stroke-width="2"/>
+                    <line x1="150" y1="200" x2="275" y2="225" stroke="#333" stroke-width="2"/>
+                    
+                    <circle cx="50" cy="125" r="5" fill="#1976d2" />
+                    <circle cx="150" cy="50" r="5" fill="#1976d2" />
+                    <circle cx="150" cy="200" r="5" fill="#1976d2" />
+                    <circle cx="275" cy="25" r="5" fill="#1976d2" />
+                    <circle cx="275" cy="85" r="5" fill="#1976d2" />
+                    <circle cx="275" cy="165" r="5" fill="#1976d2" />
+                    <circle cx="275" cy="225" r="5" fill="#1976d2" />
+
+                    <text x="15" y="130" class="math-text" fill="#1976d2">v₀</text>
+                    <text x="135" y="35" class="math-text" fill="#1976d2">v₁</text>
+                    <text x="135" y="225" class="math-text" fill="#1976d2">v₂</text>
+                    <text x="290" y="30" class="math-text" fill="#1976d2">v₁₁</text>
+                    <text x="290" y="90" class="math-text" fill="#1976d2">v₁₂</text>
+                    <text x="290" y="170" class="math-text" fill="#1976d2">v₂₁</text>
+                    <text x="290" y="230" class="math-text" fill="#1976d2">v₂₂</text>
+                </svg>
+                <div class="diagram-caption">Figura 7: Diagrama de árbol.</div>
+            </div>
+
+            <p>Se ve claramente que los vértices van formando ramas desde las cuales nacen otras nuevas ramas. Los vértices que no dan paso a otras ramas se llaman terminales.</p>
+
+            <p>El siguiente resultado caracteriza a los árboles porque decir que un grafo $G$ es un árbol siempre que cumpla alguna de las condiciones equivalentes de la siguiente propiedad.</p>
+
+            <div class="box property">
+                <div class="box-title"><i class="fa-solid fa-key"></i> Caracterización de Árboles</div>
+                <p>Sea $G=(V,E)$ un grafo simple (sin lazos) con $n$ vértices. Se dice que $G$ es un árbol si cumple alguna de las tres condiciones equivalentes siguientes:</p>
+                <ol>
+                    <li>$G$ es conexo y no posee ningún circuito.</li>
+                    <li>$G$ tiene $n-1$ aristas y no posee ningún circuito.</li>
+                    <li>$G$ es conexo y tiene $n-1$ aristas.</li>
+                </ol>
+                
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Para $n=1$ la equivalencia es evidente. Supongamos entonces que $n\ge2$. Aplicando inducción en $n$ es trivial que para $n=2$, $1 \Rightarrow 2$.</p>
+                    <p>Sea una arista $e\in E$. El grafo $G\backslash\{e\}$ tiene dos componentes conexas $G_{1}$ y $G_{2}$ sin circuitos. Sean $n_{1}=|G_{1}|$ y $n_{2}=|G_{2}|$, de donde $|E_{1}|=n_{1}-1$ y $|E_{2}|=n_{2}-1$; y por lo tanto:</p>
+                    $$ |E| = 1 + (n_{1}-1) + (n_{2}-1) = n_{1}+n_{2}-1 = n-1 $$
+                    <p>Ya tenemos $1 \Rightarrow 2$.</p>
+
+                    <p>Para demostrar $2 \Rightarrow 3$ probaremos que no puede tener más que una componente conexa. Supongamos entonces que $G$ tiene $m$ componentes conexas y sea $G_{i}=(V_{i},E_{i})$ una de ellas. Aplicando la primera implicación, puesto que $G_{i}$ es conexo y no admite circuitos (pues $G$ nos los admite) $|E_{i}|=n_{i}-1$ de donde:</p>
+                    $$ n-1 = |E| = |E_{1}| + \cdot\cdot\cdot + |E_{m}| = n_{1}-1 + ... + n_{m}-1 = n_{1} + \cdot\cdot\cdot + n_{m} - m = n-m \Rightarrow n-1 = n-m \Rightarrow m=1 $$
+                    <p>Como $m=1$, $G$ es conexo.</p>
+
+                    <p>Para la última implicación que cierra el ciclo ($3 \Rightarrow 1$) supondremos que $G$ admite los circuitos $\mathcal{C}_{1},...,\mathcal{C}_{k}$. Sea $e_{i}\in\mathcal{C}_{1}, i=1,...,k$ y sea $E^{\prime}=\{e_{1},...,e_{k}\}$. Sea además $G^{\prime}=G\backslash E^{\prime}$ el grafo que se obtiene de $G$ eliminando las aristas de $E^{\prime}$. $G^{\prime}$ es conexo y además no admite circuitos y tiene $n$ vértices. La primera implicación nos dice que:</p>
+                    $$ n-1 = |E-E^{\prime}| = |E|-|E^{\prime}| = n-1-k \Rightarrow k=0 $$
+                    <p>De lo que se desprende que $G$ no tiene circuitos.</p>
+                </div>
+            </div>
+
+            <p>Otro de los conceptos importantes en teoría de grafos es el de mapa.</p>
+        </section>
+
+        <!-- SECCIÓN 7: GRAFOS PLANOS Y COLORACIÓN -->
+        <section id="sec-7">
+            <h2><span class="section-number">7</span> Grafos planos y coloración</h2>
+            
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición</div>
+                <p>Un grafo se dice <strong>plano</strong> si es posible representarlo en el plano de modo que los vértices son puntos y las aristas son líneas (rectas o curvas) que unen los vértices. Además, si dos líneas se cortan lo harán en vértices. A dicha representación plana llamaremos <strong>mapa</strong>.</p>
+            </div>
+
+            <!-- SVG 8: Grafos Planos -->
+            <div class="diagram-container">
+                <svg width="400" height="200" viewBox="0 0 400 200">
+                    <!-- K4 Planar Representation -->
+                    <polygon points="100,20 40,160 160,160" fill="none" stroke="#333" stroke-width="2"/>
+                    <line x1="100" y1="20" x2="100" y2="100" stroke="#333" stroke-width="2"/>
+                    <line x1="40" y1="160" x2="100" y2="100" stroke="#333" stroke-width="2"/>
+                    <line x1="160" y1="160" x2="100" y2="100" stroke="#333" stroke-width="2"/>
+                    
+                    <circle cx="100" cy="20" r="5" fill="#1976d2"/>
+                    <circle cx="40" cy="160" r="5" fill="#1976d2"/>
+                    <circle cx="160" cy="160" r="5" fill="#1976d2"/>
+                    <circle cx="100" cy="100" r="5" fill="#1976d2"/>
+                    
+                    <text x="95" y="10" class="math-text" fill="#1976d2">v₄</text>
+                    <text x="20" y="170" class="math-text" fill="#1976d2">v₁</text>
+                    <text x="170" y="170" class="math-text" fill="#1976d2">v₂</text>
+                    <text x="110" y="110" class="math-text" fill="#1976d2">v₃</text>
+                    
+                    <text x="70" y="195" font-weight="bold" fill="#333">K₄ (Plano)</text>
+
+                    <!-- K5 Non Planar Representation -->
+                    <polygon points="300,20 230,80 250,160 350,160 370,80" fill="none" stroke="#d32f2f" stroke-width="2" opacity="0.6"/>
+                    <line x1="300" y1="20" x2="250" y2="160" stroke="#d32f2f" stroke-width="2" opacity="0.6"/>
+                    <line x1="300" y1="20" x2="350" y2="160" stroke="#d32f2f" stroke-width="2" opacity="0.6"/>
+                    <line x1="230" y1="80" x2="350" y2="160" stroke="#d32f2f" stroke-width="2" opacity="0.6"/>
+                    <line x1="230" y1="80" x2="370" y2="80" stroke="#d32f2f" stroke-width="2" opacity="0.6"/>
+                    <line x1="250" y1="160" x2="370" y2="80" stroke="#d32f2f" stroke-width="2" opacity="0.6"/>
+                    
+                    <circle cx="300" cy="20" r="5" fill="#d32f2f"/>
+                    <circle cx="230" cy="80" r="5" fill="#d32f2f"/>
+                    <circle cx="250" cy="160" r="5" fill="#d32f2f"/>
+                    <circle cx="350" cy="160" r="5" fill="#d32f2f"/>
+                    <circle cx="370" cy="80" r="5" fill="#d32f2f"/>
+
+                    <text x="270" y="195" font-weight="bold" fill="#333">K₅ (No plano)</text>
+                </svg>
+                <div class="diagram-caption">Figura 8: K4 tiene representación plana. K5 se interseca inevitablemente.</div>
+            </div>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo</div>
+                <p>En este caso, tal y como podemos observar en la figura, $K_{4}$ sí es un grafo plano mientras que $K_{5}$ no lo es.</p>
+            </div>
+
+            <div class="box example">
+                <div class="box-title"><i class="fa-solid fa-pen-to-square"></i> Ejemplo (Problema de los tres suministros)</div>
+                <p>Sean A, B y C tres fábricas, y sean D, E y F sus suministradores de luz, agua y gas. Queremos que cada empresa acceda a cada una de los suministradores pero las líneas de conexión han de construirse a ras del suelo pero sin cortarse.</p>
+                <p>Una representación de la situación anterior es el conocido grafo $K_{3,3}$ que no es plano.</p>
+            </div>
+
+            <p>Podemos comprobar que el mapa de la representación plana de $K_{4}$ divide al plano en una serie de regiones. Si admitimos como región la exterior, encontramos que $K_{4}$ nos proporciona 4 regiones que podemos llamar caras. Observamos además que tenemos 4 vértices y 6 aristas. Comprobamos que si $A$ es el número de aristas, $C$ el de caras y $V$ el de vértices, entonces $C+V=A+2$. Éste resultado, que demostraremos se cumple siempre, es la famosa Fórmula de Euler. Antes de probarlo necesitamos alguna herramientas más.</p>
+
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición (Contracción)</div>
+                <p>Sea $G=(V,E)$ un grafo y sea $e\in E$. Sea $G\backslash e$ el grafo obtenido de $G$ suprimiendo la arista $e$. Diremos que $G\backslash e$ es una contracción de $G$ por la arista $e$.</p>
+                <p>En general, diremos que $G^{\prime}$ es una contracción de $G$ si se ha obtenido por una sucesión de contracciones de una arista.</p>
+            </div>
+
+            <p>Pasemos a enunciar y demostrar la Fórmula de Euler.</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-scroll"></i> Teorema (Fórmula de Euler)</div>
+                <p>Sea $G$ un grafo plano conexo y sea $P$ su representación plana. Sea $A$ el número de aristas, $C$ el número de caras y $V$ el de vértices de $P$, entonces</p>
+                $$ C+V=A+2 $$
+                
+                <button class="proof-btn" onclick="toggleProof(this)"><i class="fa-solid fa-eye"></i> Ver Demostración</button>
+                <div class="proof-content">
+                    <p><strong>Demostración:</strong></p>
+                    <p>Probemos el resultado aplicando inducción en $A$.</p>
+                    <p>Para $A=0$, es decir, $G$ no tiene aristas y puesto que es un grafo conexo, $C=V=1$. Supongamos ahora que el resultado se cumple para grafos de hasta $A-1$ aristas.</p>
+                    <p>Si $G$ es un árbol sólo tenemos una región por lo que $C=1$ y por el teorema de caracterización de los árboles, $A=V-1$ y la fórmula se cumple.</p>
+                    <p>Si $G$ no es un árbol, sea $e$ una de las aristas de $G$ (perteneciente a un ciclo). El grafo $G^{\prime}=G\backslash\{e\}$ es conexo y además tiene $A-1$ aristas y, como hemos roto un ciclo, hemos fusionado dos caras, por lo que tiene $C-1$ caras. Por la hipótesis de inducción:</p>
+                    $$ (C-1) + V = (A-1) + 2 \Rightarrow C+V=A+2 $$
+                </div>
+            </div>
+
+            <p>Podemos comprobar que no se cumple la fórmula para $K_{5}$ y para $K_{3,3}$.</p>
+            
+            <p>Supongamos ahora que queremos colorear las regiones o caras en las que podemos dividir el plano mediante un grafo plano de tal manera los colores de dos regiones fronterizas no sean iguales. La actividad parece sencilla si nos ponemos a colorear $K_{4}$ o incluso un mapa que divida el plano en 100 regiones. Ahora bien, ¿cuántos colores se necesitan para colorear de esta forma un mapa con 2000 caras? Ésta ya no parece una actividad simple, realmente se convierte en un problema de difícil solución. Es lo que se conoce como el Teorema de los cuatro colores.</p>
+        </section>
+
+        <!-- SECCIÓN 8: TEOREMA DE LOS CUATRO COLORES -->
+        <section id="sec-8">
+            <h2><span class="section-number">8</span> Teorema de los cuatro colores</h2>
+            <p>El matemático londinense De Morgan a W. R. Hamilton en 1852, en la que afirmaba que uno de sus estudiantes le planteó dicho problema señalando que la solución correcta era cuatro. Esto es lo que se conoce como teorema de los cuatro colores.</p>
+
+            <div class="box theorem">
+                <div class="box-title"><i class="fa-solid fa-scroll"></i> Teorema</div>
+                <p>Todo mapa puede colorearse con cuatro colores (sin que coincidan los colores de regiones fronterizas).</p>
+            </div>
+
+            <p>La demostración de este teorema, aunque de poca relevancia en un principio para los matemáticos más relevantes, ha sido uno de los problemas abiertos durante más de cien años. Ninguno, de entre los matemáticos más relevantes del mundo, fue capaz de encontrar la demostración o de encontrar un contraejemplo. Sin embargo, en 1976 Appel y Haken obtuvieron una demostración del teorema. Consiguieron, mediante ordenador demostrar el teorema reduciendo a 2000 grafos el problema.</p>
+
+            <p>Después de muchas reticencias, parece ser que la comunidad científica ha dado como buena la demostración.</p>
+
+            <p>El problema también se puede estudiar en grafos en general mediante la definición siguiente:</p>
+            
+            <div class="box definition">
+                <div class="box-title"><i class="fa-solid fa-book-open"></i> Definición</div>
+                <p>Un grafo es coloreable si podemos asignar colores a los vértices de forma que a los vértices extremos de sus ejes les correspondan colores diferentes. Al número mínimo de colores necesarios para la coloración de un grafo se le denomina <strong>número cromático</strong> del grafo.</p>
+            </div>
+
+            <p>Se puede comprobar que para colorear cualquier grafo plano conexo se necesitan al menos cuatro colores y que, de hecho, este problema es equivalente al teorema de los cuatro colores.</p>
+        </section>
+
+        <!-- SECCIÓN 9: APLICACIONES -->
+        <section id="sec-9">
+            <h2><span class="section-number">9</span> Aplicaciones</h2>
+            <p>Hemos estudiado el problema de los puentes de Königsberg, el teorema de los cuatro colores, la fórmula de Euler, la resolución de problemas de probabilidad mediante los diagramas de árbol, etc. Pero existen otras muchas aplicaciones de la Teoría de grafos.</p>
+
+            <p>Las redes eléctricas forman hoy por hoy parte del paisaje de las ciudades de todo el mundo. Y cada es más la necesidad de energía que tenemos en nuestra vida diaria. Se hace necesario un trato más científico del trazo de redes eléctricas para encontrar el camino más corto.</p>
+
+            <!-- SVG 9: Circuito Eléctrico -->
+            <div class="diagram-container">
+                <svg width="450" height="250" viewBox="0 0 450 250">
+                    <rect x="0" y="0" width="450" height="250" fill="#e0f2f1" />
+                    
+                    <!-- Cables -->
+                    <line x1="50" y1="50" x2="400" y2="50" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="50" x2="50" y2="200" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="200" x2="400" y2="200" stroke="#333" stroke-width="2"/>
+                    <line x1="400" y1="50" x2="400" y2="200" stroke="#333" stroke-width="2"/>
+                    
+                    <line x1="150" y1="50" x2="150" y2="150" stroke="#333" stroke-width="2"/>
+                    <line x1="280" y1="50" x2="280" y2="150" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="150" x2="400" y2="150" stroke="#333" stroke-width="2"/>
+
+                    <!-- Componentes (Simplificados) -->
+                    <circle cx="50" cy="125" r="20" fill="#fff" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="135" x2="50" y2="115" stroke="#333" stroke-width="2" marker-end="url(#arrowC)"/>
+                    <text x="75" y="130" font-weight="bold">I</text>
+
+                    <rect x="140" y="80" width="20" height="40" fill="#fff" stroke="#333" stroke-width="2"/>
+                    <text x="170" y="105">R1</text>
+                    
+                    <rect x="190" y="140" width="40" height="20" fill="#fff" stroke="#333" stroke-width="2"/>
+                    <text x="200" y="135">R2</text>
+                    
+                    <rect x="270" y="80" width="20" height="40" fill="#fff" stroke="#333" stroke-width="2"/>
+                    <text x="300" y="105">R3</text>
+                    
+                    <rect x="320" y="40" width="40" height="20" fill="#fff" stroke="#333" stroke-width="2"/>
+                    <text x="330" y="30">R4</text>
+                    
+                    <rect x="320" y="140" width="40" height="20" fill="#fff" stroke="#333" stroke-width="2"/>
+                    <text x="330" y="135">R5</text>
+                    
+                    <rect x="320" y="190" width="40" height="20" fill="#fff" stroke="#333" stroke-width="2"/>
+                    <text x="330" y="230">R6</text>
+
+                    <circle cx="400" cy="100" r="25" fill="#fff" stroke="#333" stroke-width="2"/>
+                    <text x="360" y="105" font-weight="bold">E1</text>
+                    
+                    <circle cx="200" cy="200" r="25" fill="#fff" stroke="#333" stroke-width="2"/>
+                    <text x="240" y="195" font-weight="bold">E2</text>
+                    
+                    <!-- Nodos con nombres -->
+                    <circle cx="50" cy="150" r="4" fill="#000"/> <text x="30" y="170">A</text>
+                    <circle cx="150" cy="50" r="4" fill="#000"/> <text x="145" y="40">B</text>
+                    <circle cx="150" cy="150" r="4" fill="#000"/> <text x="145" y="170">C</text>
+                    <circle cx="280" cy="150" r="4" fill="#000"/> <text x="275" y="170">D</text>
+                    <circle cx="400" cy="150" r="4" fill="#000"/> <text x="415" y="170">E</text>
+                    
+                    <defs>
+                        <marker id="arrowC" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+                        </marker>
+                    </defs>
+                </svg>
+                <div class="diagram-caption">Figura 9: Circuito eléctrico abstraído como red/grafo.</div>
+            </div>
+
+            <p>Los grafos también se utilizan para diseñar circuitos electrónicos (grafos planos) o para construir programas (diagramas de flujo o los esquemas de menús utilizados en los programas para cajeros automáticos).</p>
+
+            <p>En Química para enumerar las moléculas $C_{n}H_{2n+2}$ de Cayley, en Física para hacer el estudio de las fuerzas que se aplican a un objeto, como ocurre en Estática. En Economía en el estudio de las cadenas de Markov. En genética para el estudio de problemas de descendencia que llevarán al estudio de enfermedades genéticas, pruebas de paternidad, etc.</p>
+
+            <p>En teoría de juegos, en Archivos o Bibliotecas mediante el sistema Dewey. En 1876, un bibliotecario llamado Melvil Dewey (1851-1931) creó un sistema numérico decimal para organizar los libros de la biblioteca escolar en la que trabajaba y este sistema se llama "Sistema de Clasificación Decimal Dewey".</p>
+
+            <p>Dewey dividió el conocimiento en diez grandes categorías: generalidades, filosofía, religión, ciencias sociales, filología, ciencias naturales, técnica y ciencias prácticas, arte y literatura e historia. Y cada cifra puede subdividirse muchas veces para lograr identificar claramente cada tema. Esto se hace para organizar los libros en la estantería, de forma que todos los libros que traten un tema específico queden ubicados en el mismo lugar.</p>
+        </section>
+
+    </main>
+
+    <!-- JS PARA INTERACTIVIDAD -->
+    <script>
+        // Función para mostrar/ocultar el contenido de la demostración
+        function toggleProof(btn) {
+            const proofContent = btn.nextElementSibling;
+            if (proofContent.style.display === "none" || proofContent.style.display === "") {
+                proofContent.style.display = "block";
+                btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Ocultar Demostración';
+            } else {
+                proofContent.style.display = "none";
+                btn.innerHTML = '<i class="fa-solid fa-eye"></i> Ver Demostración';
+            }
+        }
+
+        // Configuración del Intersection Observer para la barra lateral
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-50% 0px -50% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        const activeId = entry.target.getAttribute('id');
+                        const activeLink = document.querySelector(`.nav-link[href="#${activeId}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Comportamiento de anclaje suave
+            document.documentElement.style.scrollBehavior = "smooth";
+        });
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+
+</html>
